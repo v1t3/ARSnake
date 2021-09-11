@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -9,6 +9,8 @@ namespace Game
     public class MarkerController : MonoBehaviour
     {
         private ARRaycastManager _arRaycastManager;
+
+        private GameManager _gameManager;
 
         [SerializeField] private Camera arCamera;
         
@@ -22,10 +24,14 @@ namespace Game
         private void Awake()
         {
             _arRaycastManager = FindObjectOfType<ARRaycastManager>();
+            _gameManager = FindObjectOfType<GameManager>();
         }
 
         private void Update()
         {
+            if (!_gameManager.prepareMode) return;
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
             LookAtCamera();
             
             if (Input.touchCount == 2)
@@ -36,6 +42,8 @@ namespace Game
 
         private void LookAtCamera()
         {
+            // marker.SetActive(true); //todo test
+            
             var hits = new List<ARRaycastHit>();
             _arRaycastManager.Raycast(
                 new Vector2((float)Screen.width / 2, (float)Screen.height / 2),
@@ -43,16 +51,16 @@ namespace Game
                 TrackableType.Planes
             );
 
-            if (hits.Count > 0)
+            if (!_gameManager.isFieldPlaced && hits.Count > 0)
             {
                 marker.transform.position = hits[0].pose.position;
                 marker.SetActive(true);
-            }
 
-            var lookAt = arCamera.transform.position - marker.transform.position;
-            lookAt.y = 0;
-            
-            marker.transform.rotation = Quaternion.LookRotation(-lookAt);
+                var lookAt = arCamera.transform.position - marker.transform.position;
+                lookAt.y = 0;
+
+                marker.transform.rotation = Quaternion.LookRotation(-lookAt);
+            }
         }
 
         private void ScaleField()

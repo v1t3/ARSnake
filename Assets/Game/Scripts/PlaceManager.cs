@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game
 {
     public class PlaceManager : MonoBehaviour
     {
         private GameManager _gameManager;
+        private MenuManager _menuManager;
 
         [SerializeField] private GameObject marker;
         [SerializeField] private GameObject fieldToPlace;
@@ -16,16 +14,24 @@ namespace Game
         private Vector3 _initScale;
         private float _initDistance;
 
-        private bool _isPlaced;
-
         private void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
+            _menuManager = FindObjectOfType<MenuManager>();
         }
 
         private void Update()
         {
-            if (!_isPlaced && Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+            if (!_gameManager.prepareMode) return;
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+            
+            if (!_gameManager.isFieldPlaced && Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                PlaceParentField();
+            }
+            
+            //todo test
+            if (!_gameManager.isFieldPlaced && Input.GetMouseButtonDown(0))
             {
                 PlaceParentField();
             }
@@ -37,9 +43,17 @@ namespace Game
             fieldToPlace.transform.rotation = marker.transform.rotation;
             fieldToPlace.transform.localScale = marker.transform.localScale;
             fieldToPlace.SetActive(true);
+            _gameManager.isFieldPlaced = true;
+            marker.SetActive(false);
+            _menuManager.ShowPrepareMenu(true);
+        }
 
-            _isPlaced = true;
-            _gameManager.StartGame();
+        public void ResetPosition()
+        {
+            fieldToPlace.SetActive(false);
+            _gameManager.isFieldPlaced = false;
+            marker.SetActive(true);
+            _menuManager.ShowPrepareMenu(false);
         }
     }
 }

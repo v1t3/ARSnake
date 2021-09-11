@@ -10,7 +10,9 @@ namespace Game
         [SerializeField] 
         private GameObject background;
         
-        [HideInInspector]
+        public bool prepareMode;
+        public bool isFieldPlaced;
+        // [HideInInspector]
         public bool isGameActive;
 
         [HideInInspector]
@@ -48,6 +50,11 @@ namespace Game
         public void Exit()
         {
             Application.Quit();
+        }
+
+        public void SetPrepareMode(bool value)
+        {
+            prepareMode = value;
         }
     }
 }
