@@ -11,7 +11,7 @@ namespace Game
         private GameManager _gameManager;
 
         [SerializeField] private GameObject marker;
-        [SerializeField] private GameObject parent;
+        [SerializeField] private GameObject fieldToPlace;
 
         private Vector3 _initScale;
         private float _initDistance;
@@ -33,10 +33,10 @@ namespace Game
 
         private void PlaceParentField()
         {
-            parent.transform.position = marker.transform.position;
-            parent.transform.rotation = marker.transform.rotation;
-            parent.transform.localScale = marker.transform.localScale;
-            parent.SetActive(true);
+            fieldToPlace.transform.position = marker.transform.position;
+            fieldToPlace.transform.rotation = marker.transform.rotation;
+            fieldToPlace.transform.localScale = marker.transform.localScale;
+            fieldToPlace.SetActive(true);
 
             _isPlaced = true;
             _gameManager.StartGame();
