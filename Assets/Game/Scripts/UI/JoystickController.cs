@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace UI
+namespace Game.UI
 {
     public class JoystickController : MonoBehaviour
     {
@@ -11,13 +10,25 @@ namespace UI
 
         private void Update()
         {
-            var rot = gameFieldTransform.position - cameraTransform.position;
-            Quaternion toField = Quaternion.LookRotation(rot);
-            
-            // Debug.Log("rot " + rot);
-            // Debug.Log("toField " + toField);
+            RotateJoystick();
+        }
 
-            joystickTransform.localRotation = new Quaternion(0,0,toField.y,toField.w);
+        private void RotateJoystick()
+        {
+            Vector3 toField = gameFieldTransform.forward;
+            toField.y = 0;
+            Vector3 cameraForward = cameraTransform.forward;
+            cameraForward.y = 0;
+
+            float angle = Vector3.Angle(toField, cameraForward);
+            Vector3 cross = Vector3.Cross(toField, cameraForward);
+            
+            if (cross.y < 0)
+            {
+                angle = -angle;
+            }
+            
+            joystickTransform.localRotation = Quaternion.Euler(0,0,angle);
         }
     }
 }

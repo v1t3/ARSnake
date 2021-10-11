@@ -31,10 +31,10 @@ namespace Game
             }
             
             //todo test
-            if (!_gameManager.isFieldPlaced && Input.GetMouseButtonDown(0))
-            {
-                PlaceParentField();
-            }
+            // if (!_gameManager.isFieldPlaced && Input.GetMouseButtonDown(0) && Input.touchCount == 0)
+            // {
+            //     PlaceParentField();
+            // }
         }
 
         private void PlaceParentField()
