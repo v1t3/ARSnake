@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-namespace Game
+namespace Game.Scripts
 {
     public class GameManager : MonoBehaviour
     {
         private FoodCreator _foodCreator;
+        private MenuManager _menuManager;
 
         [SerializeField] 
         private GameObject background;
@@ -23,6 +25,7 @@ namespace Game
         private void Start()
         {
             _foodCreator = FindObjectOfType<FoodCreator>();
+            _menuManager = FindObjectOfType<MenuManager>();
             
             fieldHeight = (int)background.transform.localScale.x;
             fieldWidth = (int)background.transform.localScale.y;
@@ -33,13 +36,28 @@ namespace Game
             if (Input.GetKey("escape"))
             {
                 Exit();
+                // TogglePausePlay();
             }
         }
 
-        public void StartGame()
+        public void StartPlay()
         {
+            Debug.Log("StartPlay");
             isGameActive = true;
             _foodCreator.Create();
+        }
+
+        public void TogglePausePlay()
+        {
+            isGameActive = !isGameActive;
+            _menuManager.TogglePausePlay(!isGameActive);
+        }
+
+        public void GameOver()
+        {
+            Debug.Log("GameOver");
+            isGameActive = false;
+            _menuManager.ShowGameOverMenu();
         }
 
         public void Reload()

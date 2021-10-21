@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-namespace Game
+namespace Game.Scripts
 {
     public class PlaneManager : MonoBehaviour
     {
@@ -13,8 +13,6 @@ namespace Game
 
         private void Start()
         {
-            arPlaneManager = GetComponent<ARPlaneManager>();
-            
             UpdateARPlane();
         }
 

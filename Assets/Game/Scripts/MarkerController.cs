@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace Game
+namespace Game.Scripts
 {
     public class MarkerController : MonoBehaviour
     {

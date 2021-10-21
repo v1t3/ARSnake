@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
+using Game.Scripts.PlayerBase;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game
+namespace Game.Scripts
 {
     public class FoodCreator : MonoBehaviour
     {
         private GameManager _gameManager;
-        private MoveManager _moveManager;
+        private PlayerMove _playerMove;
 
         [SerializeField] private GameObject parent;
 
@@ -20,7 +21,7 @@ namespace Game
         private void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
-            _moveManager = FindObjectOfType<MoveManager>();
+            _playerMove = FindObjectOfType<PlayerMove>();
         }
 
         public void Create()
@@ -51,7 +52,7 @@ namespace Game
         private bool CheckPlace(Vector2Int newPosition)
         {
             //Check if snake
-            if (_moveManager.positions.Any(position => position == newPosition))
+            if (_playerMove.positions.Any(position => position == newPosition))
             {
                 return true;
             }

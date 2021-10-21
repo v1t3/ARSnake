@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Game
+namespace Game.Scripts
 {
     public class PlaceManager : MonoBehaviour
     {
@@ -24,17 +24,21 @@ namespace Game
         {
             if (!_gameManager.prepareMode) return;
             if (EventSystem.current.IsPointerOverGameObject()) return;
-            
-            if (!_gameManager.isFieldPlaced && Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+
+            if (
+                !_gameManager.isFieldPlaced &&
+                Input.touchCount == 1 &&
+                Input.GetTouch(0).phase == TouchPhase.Began
+            )
             {
                 PlaceParentField();
             }
-            
+
             //todo test
-            // if (!_gameManager.isFieldPlaced && Input.GetMouseButtonDown(0) && Input.touchCount == 0)
-            // {
-            //     PlaceParentField();
-            // }
+            if (!_gameManager.isFieldPlaced && Input.GetMouseButtonDown(0) && Input.touchCount == 0)
+            {
+                PlaceParentField();
+            }
         }
 
         private void PlaceParentField()
