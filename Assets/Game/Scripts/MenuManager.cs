@@ -65,12 +65,14 @@ namespace Game.Scripts
         {
             playMenuPanel.SetActive(false);
             pauseMenuPanel.SetActive(true);
+            gameManager.TogglePausePlay();
         }
 
         public void ContinuePlay()
         {
             pauseMenuPanel.SetActive(false);
             playMenuPanel.SetActive(true);
+            gameManager.TogglePausePlay();
         }
 
         public void TogglePausePlay(bool value)
