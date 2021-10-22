@@ -4384,7 +4384,7 @@ MonoBehaviour:
   prepareMenuPanel: {fileID: 1709833997}
   pauseMenuPanel: {fileID: 407545899}
   settingsMenuPanel: {fileID: 2115186633}
-  gameMenuPanel: {fileID: 1490278478}
+  playMenuPanel: {fileID: 1490278478}
   gameOverMenuPanel: {fileID: 1610646465}
   prepareMenu: {fileID: 1053170275}
 --- !u!4 &1476603874
@@ -4413,7 +4413,7 @@ GameObject:
   - component: {fileID: 1490278481}
   - component: {fileID: 1490278480}
   m_Layer: 5
-  m_Name: GamePanel
+  m_Name: PlayPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

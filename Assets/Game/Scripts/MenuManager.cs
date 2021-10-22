@@ -4,19 +4,20 @@ namespace Game.Scripts
 {
     public class MenuManager : MonoBehaviour
     {
+        [Header("Managers")]
         [SerializeField] private GameManager gameManager;
         [SerializeField] private PlaneManager planeManager;
         [SerializeField] private PlaceManager placeManager;
 
-        [Space]
+        [Header("Panels")]
         [SerializeField] private GameObject startMenuPanel;
         [SerializeField] private GameObject prepareMenuPanel;
         [SerializeField] private GameObject pauseMenuPanel;
         [SerializeField] private GameObject settingsMenuPanel;
-        [SerializeField] private GameObject gameMenuPanel;
+        [SerializeField] private GameObject playMenuPanel;
         [SerializeField] private GameObject gameOverMenuPanel;
         
-        [Space]
+        [Header("Menus")]
         [SerializeField] private GameObject prepareMenu;
 
         public void StartGame()
@@ -50,7 +51,7 @@ namespace Game.Scripts
         public void Play()
         {
             prepareMenuPanel.SetActive(false);
-            gameMenuPanel.SetActive(true);
+            playMenuPanel.SetActive(true);
             gameManager.StartPlay();
             planeManager.SetARPlane(false);
         }
@@ -62,19 +63,19 @@ namespace Game.Scripts
 
         public void PausePlay()
         {
-            gameMenuPanel.SetActive(false);
+            playMenuPanel.SetActive(false);
             pauseMenuPanel.SetActive(true);
         }
 
         public void ContinuePlay()
         {
             pauseMenuPanel.SetActive(false);
-            gameMenuPanel.SetActive(true);
+            playMenuPanel.SetActive(true);
         }
 
         public void TogglePausePlay(bool value)
         {
-            gameMenuPanel.SetActive(!value);
+            playMenuPanel.SetActive(!value);
             pauseMenuPanel.SetActive(value);
         }
 
@@ -91,7 +92,7 @@ namespace Game.Scripts
 
         public void ShowGameOverMenu()
         {
-            gameMenuPanel.SetActive(false);
+            playMenuPanel.SetActive(false);
             gameOverMenuPanel.SetActive(true);
         }
 
