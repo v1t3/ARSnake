@@ -7,6 +7,7 @@ TagManager:
   - Food
   - Tail
   - Wall
+  - FieldBackground
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Field
   - 
   - 
   - 

@@ -202,6 +202,16 @@ namespace Game.Scripts.PlayerBase
             if (_foodCreator.CheckFood(position))
             {
                 AddTail();
+                
+                Food food = _foodCreator.GetFood(position);
+
+                if (food)
+                {
+                    _player.UpdatePointCount(food.points);
+                }
+                
+                _foodCreator.DestroyFood(position);
+                _foodCreator.Create();
             }
         }
 

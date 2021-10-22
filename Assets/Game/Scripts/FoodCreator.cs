@@ -58,38 +58,29 @@ namespace Game.Scripts
             }
 
             //Check if food
-            foreach (var food in allFood)
-            {
-                var foodPos = food.transform.position;
-                var position = new Vector2Int((int)foodPos.x, (int)foodPos.y);
-
-                if (position == newPosition)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return allFood.Any(food => food.selfPosition == newPosition);
         }
 
         public bool CheckFood(Vector2Int position)
         {
+            return allFood.Any(food => food.selfPosition == position);
+        }
+
+        public Food GetFood(Vector2Int position)
+        {
+            return allFood.FirstOrDefault(food => food.selfPosition == position);
+        }
+
+        public void DestroyFood(Vector2Int position)
+        {
             for (var i = 0; i < allFood.Count; i++)
             {
-                if (allFood[i].selfPosition != position)
-                {
-                    continue;
-                }
+                if (allFood[i].selfPosition != position) continue;
                 
                 Destroy(allFood[i].gameObject);
                 allFood.RemoveAt(i);
-                
-                Create();
-
-                return true;
+                break;
             }
-
-            return false;
         }
     }
 }
