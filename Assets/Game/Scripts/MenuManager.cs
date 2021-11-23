@@ -6,7 +6,6 @@ namespace Game.Scripts
     {
         [Header("Managers")]
         [SerializeField] private GameManager gameManager;
-        [SerializeField] private PlaneManager planeManager;
         [SerializeField] private PlaceManager placeManager;
 
         [Header("Panels")]
@@ -24,8 +23,7 @@ namespace Game.Scripts
         {
             startMenuPanel.SetActive(false);
             prepareMenuPanel.SetActive(true);
-            gameManager.SetPrepareMode(true);
-            planeManager.SetARPlane(true);
+            gameManager.BeginPrepare();
         }
 
         public void ShowSettingsInStart()
@@ -42,18 +40,13 @@ namespace Game.Scripts
 
         public void ShowPrepareMenu(bool value)
         {
-            if (prepareMenu != null)
-            {
-                prepareMenu.SetActive(value);
-            }
+            prepareMenu.SetActive(value);
         }
 
         public void Play()
         {
             prepareMenuPanel.SetActive(false);
-            playMenuPanel.SetActive(true);
             gameManager.StartPlay();
-            planeManager.SetARPlane(false);
         }
 
         public void ResetField()
@@ -63,7 +56,7 @@ namespace Game.Scripts
 
         public void PausePlay()
         {
-            playMenuPanel.SetActive(false);
+            ShowPlayMenu(false);
             pauseMenuPanel.SetActive(true);
             gameManager.TogglePausePlay();
         }
@@ -71,30 +64,35 @@ namespace Game.Scripts
         public void ContinuePlay()
         {
             pauseMenuPanel.SetActive(false);
-            playMenuPanel.SetActive(true);
+            ShowPlayMenu(true);
             gameManager.TogglePausePlay();
         }
 
         public void TogglePausePlay(bool value)
         {
-            playMenuPanel.SetActive(!value);
+            ShowPlayMenu(!value);
             pauseMenuPanel.SetActive(value);
         }
 
         public void RestartGame()
         {
+            pauseMenuPanel.SetActive(false);
             gameManager.Reload();
         }
 
         public void ReturnToMainMenu()
         {
-            // gameOverMenuPanel.SetActive(false);
-            gameManager.Reload();
+            gameManager.ReturnToMainMenu();
+        }
+
+        public void ShowPlayMenu(bool value)
+        {
+            playMenuPanel.SetActive(value);
         }
 
         public void ShowGameOverMenu()
         {
-            playMenuPanel.SetActive(false);
+            ShowPlayMenu(false);
             gameOverMenuPanel.SetActive(true);
         }
 

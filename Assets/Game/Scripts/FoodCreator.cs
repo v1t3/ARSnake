@@ -82,5 +82,14 @@ namespace Game.Scripts
                 break;
             }
         }
+
+        public void DestroyAllFood()
+        {
+            for (var i = 0; i < allFood.Count; i++)
+            {
+                Destroy(allFood[i].gameObject);
+                allFood.RemoveAt(i);
+            }
+        }
     }
 }

@@ -27,6 +27,12 @@ namespace Game.Scripts.PlayerBase
             _gameManager.GameOver();
         }
 
+        public void SetPointCount(int value)
+        {
+            _pointsCount = value;
+            UpdatePointCountText();
+        }
+
         public void UpdatePointCount(int value)
         {
             _pointsCount += value;

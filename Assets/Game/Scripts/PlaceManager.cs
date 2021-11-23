@@ -41,6 +41,9 @@ namespace Game.Scripts
             }
         }
 
+        /**
+         * Used in UI
+         */
         private void PlaceParentField()
         {
             fieldToPlace.transform.position = marker.transform.position;
@@ -52,6 +55,9 @@ namespace Game.Scripts
             _menuManager.ShowPrepareMenu(true);
         }
 
+        /**
+         * Used in UI
+         */
         public void ResetPosition()
         {
             fieldToPlace.SetActive(false);

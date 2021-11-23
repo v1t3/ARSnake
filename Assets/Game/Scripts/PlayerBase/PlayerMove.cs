@@ -16,10 +16,14 @@ namespace Game.Scripts.PlayerBase
         [SerializeField] private float fastStepDelay = 0.1f;
         private float _stepDelay;
 
+        private Vector2Int _startDirection = Vector2Int.up;
         private Vector2Int _currentDirection;
 
         [SerializeField] private List<Transform> parts = new List<Transform>();
-        [HideInInspector] public List<Vector2Int> positions = new List<Vector2Int>();
+        // [HideInInspector]
+        public List<Vector2Int> positions = new List<Vector2Int>();
+        public List<Transform> _startParts = new List<Transform>();
+        public List<Vector2Int> _startPositions = new List<Vector2Int>();
 
         private float _timer;
 
@@ -38,7 +42,10 @@ namespace Game.Scripts.PlayerBase
                 positions.Add(new Vector2Int((int)partPos.x, (int)partPos.y));
             }
 
-            _currentDirection = Vector2Int.up;
+            _startParts = new List<Transform>(parts);
+            _startPositions = new List<Vector2Int>(positions);
+            _currentDirection = _startDirection;
+            
             SetNormalStep();
         }
 
@@ -223,6 +230,21 @@ namespace Game.Scripts.PlayerBase
         public void SetFastStep()
         {
             _stepDelay = fastStepDelay;
+        }
+
+        public void ResetMove()
+        {
+            foreach (var part in parts)
+            {
+                if (!_startParts.Contains(part))
+                {
+                    Destroy(part.gameObject);
+                }
+            }
+            
+            parts = new List<Transform>(_startParts);
+            positions = new List<Vector2Int>(_startPositions);
+            _currentDirection = _startDirection;
         }
     }
 }
