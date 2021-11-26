@@ -28,8 +28,8 @@ namespace Game.Scripts
 
         private void Update()
         {
-            if (!_gameManager.prepareMode) return;
-            if (_gameManager.isFieldPlaced) return;
+            if (!_gameManager.PrepareMode) return;
+            if (_gameManager.IsFieldPlaced) return;
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
             if (Input.touchCount == 2)

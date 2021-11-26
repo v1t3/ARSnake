@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace Game.Scripts.PlayerBase
 {
@@ -8,40 +6,14 @@ namespace Game.Scripts.PlayerBase
     {
         private GameManager _gameManager;
 
-        [SerializeField] private Text pointsCountText;
-
-        private int _pointsCount;
-
         private void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
         }
 
-        private void Start()
-        {
-            UpdatePointCountText();
-        }
-
         public void HitTail()
         {
             _gameManager.GameOver();
-        }
-
-        public void SetPointCount(int value)
-        {
-            _pointsCount = value;
-            UpdatePointCountText();
-        }
-
-        public void UpdatePointCount(int value)
-        {
-            _pointsCount += value;
-            UpdatePointCountText();
-        }
-
-        private void UpdatePointCountText()
-        {
-            pointsCountText.text = _pointsCount.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

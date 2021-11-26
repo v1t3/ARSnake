@@ -22,37 +22,36 @@ namespace Game.Scripts
 
         private void Update()
         {
-            if (!_gameManager.prepareMode) return;
+            if (!_gameManager.PrepareMode) return;
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
             if (
-                !_gameManager.isFieldPlaced &&
+                !_gameManager.IsFieldPlaced &&
                 Input.touchCount == 1 &&
                 Input.GetTouch(0).phase == TouchPhase.Began
             )
             {
                 PlaceParentField();
             }
-
+            
             //todo test
-            if (!_gameManager.isFieldPlaced && Input.GetMouseButtonDown(0) && Input.touchCount == 0)
+            if (!_gameManager.IsFieldPlaced && Input.GetMouseButtonDown(0) && Input.touchCount == 0)
             {
                 PlaceParentField();
             }
         }
 
-        /**
-         * Used in UI
-         */
         private void PlaceParentField()
         {
             fieldToPlace.transform.position = marker.transform.position;
             fieldToPlace.transform.rotation = marker.transform.rotation;
             fieldToPlace.transform.localScale = marker.transform.localScale;
+            
             fieldToPlace.SetActive(true);
-            _gameManager.isFieldPlaced = true;
+            _gameManager.IsFieldPlaced = true;
             marker.SetActive(false);
-            _menuManager.ShowPrepareMenu(true);
+            
+            _menuManager.prepareBottomMenu.SetActive(true);
         }
 
         /**
@@ -60,10 +59,22 @@ namespace Game.Scripts
          */
         public void ResetPosition()
         {
-            fieldToPlace.SetActive(false);
-            _gameManager.isFieldPlaced = false;
+            _gameManager.IsFieldPlaced = false;
+            
             marker.SetActive(true);
-            _menuManager.ShowPrepareMenu(false);
+            fieldToPlace.SetActive(false);
+            
+            _menuManager.prepareBottomMenu.SetActive(false);
+        }
+
+        public void DisablePlacement()
+        {
+            _gameManager.IsFieldPlaced = false;
+            
+            marker.SetActive(false);
+            fieldToPlace.SetActive(false);
+            
+            _menuManager.prepareBottomMenu.SetActive(false);
         }
     }
 }

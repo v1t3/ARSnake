@@ -24,6 +24,16 @@ namespace Game.Scripts
             _playerMove = FindObjectOfType<PlayerMove>();
         }
 
+        private void Update()
+        {
+            if (!_gameManager.IsGameActive) return;
+
+            if (allFood.Count == 0)
+            {
+                Create();
+            }
+        }
+
         public void Create()
         {
             Vector2Int randomPos = GeneratePosition();

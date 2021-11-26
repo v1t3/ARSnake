@@ -4,8 +4,11 @@ namespace Game.Scripts
 {
     public class Food : MonoBehaviour
     {
-        public int points;
+        [SerializeField] private int points = 100;
+
         [HideInInspector]
         public Vector2Int selfPosition;
+        
+        public int Points => points;
     }
 }

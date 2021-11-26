@@ -1,6 +1,6 @@
 using Game.Scripts.PlayerBase;
+using Game.Scripts.Resources;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Game.Scripts
 {
@@ -8,99 +8,168 @@ namespace Game.Scripts
     {
         private FoodCreator _foodCreator;
         private MenuManager _menuManager;
-        private PlaneManager _planeManager;
         private Player _player;
         private PlayerMove _playerMove;
         private PlaceManager _placeManager;
+        private ResourceContainer _resourceContainer;
 
-        [SerializeField] 
-        private GameObject background;
+        [SerializeField] private GameObject background;
+
+        [HideInInspector] public int fieldHeight;
+        [HideInInspector] public int fieldWidth;
+
+        private bool _prepareMode;
+        private bool _isFieldPlaced;
+        private bool _isGameActive;
+
+        public bool PrepareMode
+        {
+            get => _prepareMode;
+            private set => _prepareMode = value;
+        }
+
+        public bool IsFieldPlaced
+        {
+            get => _isFieldPlaced;
+            set => _isFieldPlaced = value;
+        }
         
-        public bool prepareMode;
-        public bool isFieldPlaced;
-        // [HideInInspector]
-        public bool isGameActive;
+        public bool IsGameActive
+        {
+            get => _isGameActive;
+            set => _isGameActive = value;
+        }
 
-        [HideInInspector]
-        public int fieldHeight;
-        [HideInInspector]
-        public int fieldWidth;
-
-        private void Start()
+        private void Awake()
         {
             _foodCreator = FindObjectOfType<FoodCreator>();
             _menuManager = FindObjectOfType<MenuManager>();
-            _planeManager = FindObjectOfType<PlaneManager>();
-            _player = FindObjectOfType<Player>();
-            _playerMove = FindObjectOfType<PlayerMove>();
+            _player = FindObjectOfType<Player>(true);
+            _playerMove = FindObjectOfType<PlayerMove>(true);
             _placeManager = FindObjectOfType<PlaceManager>();
-            
-            fieldHeight = (int)background.transform.localScale.x;
-            fieldWidth = (int)background.transform.localScale.y;
+            _resourceContainer = FindObjectOfType<ResourceContainer>();
         }
-        
+
+        private void Start()
+        {
+            SetFieldParameters();
+            _placeManager.DisablePlacement();
+        }
+
         private void Update()
         {
             if (Input.GetKey("escape"))
             {
                 Exit();
-                // TogglePausePlay();
             }
         }
 
-        public void BeginPrepare()
+        private void SetFieldParameters()
         {
-            Debug.Log("BeginPrepare");
-            SetPrepareMode(true);
-            isGameActive = false;
+            fieldHeight = (int)background.transform.localScale.x;
+            fieldWidth = (int)background.transform.localScale.y;
         }
 
-        public void StartPlay()
+        public void PrepareGame()
         {
-            Debug.Log("StartPlay");
-            SetPrepareMode(false);
-            _menuManager.ShowPlayMenu(true);
-            isGameActive = true;
-            _foodCreator.Create();
+            _menuManager.startMenuPanel.SetActive(false);
+            _menuManager.prepareMenuPanel.SetActive(true);
+            _menuManager.prepareBottomMenu.SetActive(false);
+            
+            _placeManager.ResetPosition();
+            _resourceContainer.Reset();
+            _player.gameObject.SetActive(false);
+            
+            IsGameActive = false;
+            PrepareMode = true;
         }
 
-        public void TogglePausePlay()
+        public void CancelPrepareGame()
         {
-            isGameActive = !isGameActive;
-            _menuManager.TogglePausePlay(!isGameActive);
+            _menuManager.startMenuPanel.SetActive(true);
+            _menuManager.prepareMenuPanel.SetActive(false);
+            
+            PrepareMode = false;
+            
+            _placeManager.DisablePlacement();
+        }
+
+        public void StartGame()
+        {
+            _menuManager.prepareMenuPanel.SetActive(false);
+            _menuManager.playMenuPanel.SetActive(true);
+            
+            _player.gameObject.SetActive(true);
+            
+            PrepareMode = false;
+            IsGameActive = true;
+        }
+
+        public void RestartGame()
+        {
+            _menuManager.pauseMenuPanel.SetActive(false);
+            _menuManager.playMenuPanel.SetActive(false);
+            _menuManager.gameOverMenuPanel.SetActive(false);
+
+            ResetGameParams();
+            PrepareGame();
+        }
+
+        public void ShowSettings()
+        {
+            _menuManager.settingsMenuPanel.SetActive(true);
+            _menuManager.startMenuPanel.SetActive(false);
+        }
+
+        public void HideSettings()
+        {
+            _menuManager.settingsMenuPanel.SetActive(false);
+            _menuManager.startMenuPanel.SetActive(true);
+        }
+
+        public void PauseGame()
+        {
+            IsGameActive = false;
+            _menuManager.pauseMenuPanel.SetActive(true);
+        }
+
+        public void UnpauseGame()
+        {
+            IsGameActive = true;
+            _menuManager.pauseMenuPanel.SetActive(false);
+        }
+
+        public void ReturnToMainMenu()
+        {
+            _menuManager.playMenuPanel.SetActive(false);
+            _menuManager.pauseMenuPanel.SetActive(false);
+            _menuManager.gameOverMenuPanel.SetActive(false);
+            _menuManager.startMenuPanel.SetActive(true);
+
+            ResetGameParams();
         }
 
         public void GameOver()
         {
             Debug.Log("GameOver");
-            isGameActive = false;
-            _menuManager.ShowGameOverMenu();
-        }
 
-        public void ReturnToMainMenu()
-        {
-            //todo
-        }
-
-        public void Reload()
-        {
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            isGameActive = false;
-            _player.SetPointCount(0);
-            _foodCreator.DestroyAllFood();
-            _playerMove.ResetMove();
-            StartPlay();
+            IsGameActive = false;
+            _menuManager.playMenuPanel.SetActive(false);
+            _menuManager.gameOverMenuPanel.SetActive(true);
         }
 
         public void Exit()
         {
+            Debug.Log("Exit");
             Application.Quit();
         }
 
-        public void SetPrepareMode(bool value)
+        private void ResetGameParams()
         {
-            prepareMode = value;
-            _planeManager.SetARPlane(value);
+            _playerMove.ResetMove();
+            _player.gameObject.SetActive(false);
+            _foodCreator.DestroyAllFood();
+            _placeManager.DisablePlacement();
         }
     }
 }

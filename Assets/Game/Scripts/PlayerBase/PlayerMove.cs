@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using Game.Scripts.Resources;
 using UnityEngine;
 
 namespace Game.Scripts.PlayerBase
@@ -9,8 +9,8 @@ namespace Game.Scripts.PlayerBase
         private GameManager _gameManager;
         private FoodCreator _foodCreator;
         private Player _player;
+        private ResourceContainer _resourceContainer;
 
-        [SerializeField] private GameObject fieldWrap;
         [SerializeField] private GameObject tailPrefab;
         [SerializeField] private float normalStepDelay = 0.2f;
         [SerializeField] private float fastStepDelay = 0.1f;
@@ -20,10 +20,10 @@ namespace Game.Scripts.PlayerBase
         private Vector2Int _currentDirection;
 
         [SerializeField] private List<Transform> parts = new List<Transform>();
-        // [HideInInspector]
-        public List<Vector2Int> positions = new List<Vector2Int>();
-        public List<Transform> _startParts = new List<Transform>();
-        public List<Vector2Int> _startPositions = new List<Vector2Int>();
+
+        [HideInInspector] public List<Vector2Int> positions = new List<Vector2Int>();
+        private List<Transform> _startParts = new List<Transform>();
+        private List<Vector2Int> _startPositions = new List<Vector2Int>();
 
         private float _timer;
 
@@ -32,26 +32,18 @@ namespace Game.Scripts.PlayerBase
             _gameManager = FindObjectOfType<GameManager>();
             _foodCreator = FindObjectOfType<FoodCreator>();
             _player = FindObjectOfType<Player>();
+            _resourceContainer = FindObjectOfType<ResourceContainer>();
         }
 
         private void Start()
         {
-            foreach (var part in parts)
-            {
-                var partPos = part.transform.localPosition;
-                positions.Add(new Vector2Int((int)partPos.x, (int)partPos.y));
-            }
-
-            _startParts = new List<Transform>(parts);
-            _startPositions = new List<Vector2Int>(positions);
-            _currentDirection = _startDirection;
-            
+            SetStartData();
             SetNormalStep();
         }
 
         private void Update()
         {
-            if (!_gameManager.isGameActive) return;
+            if (!_gameManager.IsGameActive) return;
             _timer += Time.deltaTime;
 
             if (Input.GetKeyDown((KeyCode.W)))
@@ -184,7 +176,7 @@ namespace Game.Scripts.PlayerBase
         private void AddTail()
         {
             var newPos = positions[positions.Count - 1];
-            var newTailPart = Instantiate(tailPrefab, fieldWrap.transform);
+            var newTailPart = Instantiate(tailPrefab, gameObject.transform);
             newTailPart.transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
 
             parts.Add(newTailPart.transform);
@@ -209,17 +201,30 @@ namespace Game.Scripts.PlayerBase
             if (_foodCreator.CheckFood(position))
             {
                 AddTail();
-                
+
                 Food food = _foodCreator.GetFood(position);
 
                 if (food)
                 {
-                    _player.UpdatePointCount(food.points);
+                    _resourceContainer.UpdatePoints(food.Points);
                 }
-                
+
                 _foodCreator.DestroyFood(position);
                 _foodCreator.Create();
             }
+        }
+
+        private void SetStartData()
+        {
+            foreach (var part in parts)
+            {
+                var partPos = part.transform.localPosition;
+                positions.Add(new Vector2Int((int)partPos.x, (int)partPos.y));
+            }
+
+            _startParts = new List<Transform>(parts);
+            _startPositions = new List<Vector2Int>(positions);
+            _currentDirection = _startDirection;
         }
 
         public void SetNormalStep()
@@ -234,16 +239,24 @@ namespace Game.Scripts.PlayerBase
 
         public void ResetMove()
         {
-            foreach (var part in parts)
+            for (int i = parts.Count - 1; i >= 0; i--)
             {
-                if (!_startParts.Contains(part))
-                {
-                    Destroy(part.gameObject);
-                }
+                if (_startParts.Contains(parts[i])) continue;
+
+                Destroy(parts[i].gameObject);
+                parts.RemoveAt(i);
             }
-            
-            parts = new List<Transform>(_startParts);
-            positions = new List<Vector2Int>(_startPositions);
+
+            positions = new List<Vector2Int>();
+
+            for (var i = 0; i < _startPositions.Count; i++)
+            {
+                var position = _startPositions[i];
+                positions.Add(position);
+
+                parts[i].localPosition = new Vector3(position.x, position.y, 0);
+            }
+
             _currentDirection = _startDirection;
         }
     }
