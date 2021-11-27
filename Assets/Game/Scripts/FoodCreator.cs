@@ -8,25 +8,18 @@ namespace Game.Scripts
 {
     public class FoodCreator : MonoBehaviour
     {
-        private GameManager _gameManager;
-        private PlayerMove _playerMove;
+        [SerializeField] private GameManager gameManager;
+        [SerializeField] private PlayerMove playerMove;
 
         [SerializeField] private GameObject parent;
 
         [SerializeField] private List<GameObject> foodPrefabs = new List<GameObject>();
 
-        [SerializeField]
-        private List<Food> allFood = new List<Food>();
-
-        private void Awake()
-        {
-            _gameManager = FindObjectOfType<GameManager>();
-            _playerMove = FindObjectOfType<PlayerMove>();
-        }
+        [SerializeField] private List<Food> allFood = new List<Food>();
 
         private void Update()
         {
-            if (!_gameManager.IsGameActive) return;
+            if (!gameManager.IsGameActive) return;
 
             if (allFood.Count == 0)
             {
@@ -54,15 +47,15 @@ namespace Game.Scripts
         private Vector2Int GeneratePosition()
         {
             return new Vector2Int(
-                Random.Range(0, _gameManager.fieldHeight),
-                Random.Range(0, _gameManager.fieldWidth)
+                Random.Range(0, gameManager.fieldHeight),
+                Random.Range(0, gameManager.fieldWidth)
             );
         }
 
         private bool CheckPlace(Vector2Int newPosition)
         {
             //Check if snake
-            if (_playerMove.positions.Any(position => position == newPosition))
+            if (playerMove.Positions.Any(position => position == newPosition))
             {
                 return true;
             }
@@ -86,7 +79,7 @@ namespace Game.Scripts
             for (var i = 0; i < allFood.Count; i++)
             {
                 if (allFood[i].selfPosition != position) continue;
-                
+
                 Destroy(allFood[i].gameObject);
                 allFood.RemoveAt(i);
                 break;

@@ -58,11 +58,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb183a03f34b6d841975e878e498a247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldWrap: {fileID: 0}
   tailPrefab: {fileID: 9117901375725985078, guid: 7553dfcfb0989dc4eae11036951be5d3, type: 3}
-  normalStepDelay: 0.2
+  normalStepDelay: 0.25
   fastStepDelay: 0.1
   parts:
+  - {fileID: 6821994684543478863}
+  - {fileID: 6821994684783639990}
+  startParts:
   - {fileID: 6821994684543478863}
   - {fileID: 6821994684783639990}
   positions: []

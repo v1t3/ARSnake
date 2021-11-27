@@ -8,10 +8,11 @@ namespace Game.Scripts
     {
         private FoodCreator _foodCreator;
         private MenuManager _menuManager;
-        private Player _player;
-        private PlayerMove _playerMove;
         private PlaceManager _placeManager;
         private ResourceContainer _resourceContainer;
+        
+        [SerializeField] private Player player;
+        [SerializeField] private PlayerMove playerMove;
 
         [SerializeField] private GameObject background;
 
@@ -44,8 +45,6 @@ namespace Game.Scripts
         {
             _foodCreator = FindObjectOfType<FoodCreator>();
             _menuManager = FindObjectOfType<MenuManager>();
-            _player = FindObjectOfType<Player>(true);
-            _playerMove = FindObjectOfType<PlayerMove>(true);
             _placeManager = FindObjectOfType<PlaceManager>();
             _resourceContainer = FindObjectOfType<ResourceContainer>();
         }
@@ -78,7 +77,7 @@ namespace Game.Scripts
             
             _placeManager.ResetPosition();
             _resourceContainer.Reset();
-            _player.gameObject.SetActive(false);
+            player.gameObject.SetActive(false);
             
             IsGameActive = false;
             PrepareMode = true;
@@ -99,7 +98,7 @@ namespace Game.Scripts
             _menuManager.prepareMenuPanel.SetActive(false);
             _menuManager.playMenuPanel.SetActive(true);
             
-            _player.gameObject.SetActive(true);
+            player.gameObject.SetActive(true);
             
             PrepareMode = false;
             IsGameActive = true;
@@ -166,8 +165,8 @@ namespace Game.Scripts
 
         private void ResetGameParams()
         {
-            _playerMove.ResetMove();
-            _player.gameObject.SetActive(false);
+            playerMove.ResetMove();
+            player.gameObject.SetActive(false);
             _foodCreator.DestroyAllFood();
             _placeManager.DisablePlacement();
         }

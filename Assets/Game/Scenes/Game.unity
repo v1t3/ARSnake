@@ -798,6 +798,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112359797}
   m_CullTransparentMesh: 1
+--- !u!114 &115767091 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3560545397723626679, guid: eea58ae9bba42cf4985addc5e3bdec5c, type: 3}
+  m_PrefabInstance: {fileID: 6821994682859719548}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e9c5f2c4694c6f8eb5426825ea0661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &122530784
 GameObject:
   m_ObjectHideFlags: 0
@@ -2294,6 +2305,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862cdb36221dbe6479405a155d3d38ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 115767091}
+  playerMove: {fileID: 292694169}
   background: {fileID: 1370253310}
   fieldHeight: 0
   fieldWidth: 0
@@ -3454,6 +3467,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73ef0f6cdae387e4da672e7c5890433f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 486513205}
+  playerMove: {fileID: 292694169}
   parent: {fileID: 787793324}
   foodPrefabs:
   - {fileID: 4105420564934480605, guid: b7ea6698be1f64b4fba8514a8a9287c4, type: 3}
@@ -5970,7 +5985,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
+        - m_Target: {fileID: 292694169}
           m_TargetAssemblyTypeName: Game.Scripts.PlayerBase.PlayerMove, Assembly-CSharp
           m_MethodName: SetFastStep
           m_Mode: 1
@@ -5986,7 +6001,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
+        - m_Target: {fileID: 292694169}
           m_TargetAssemblyTypeName: Game.Scripts.PlayerBase.PlayerMove, Assembly-CSharp
           m_MethodName: SetNormalStep
           m_Mode: 1
@@ -7297,10 +7312,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 787793325}
     m_Modifications:
-    - target: {fileID: 5757183314156345297, guid: eea58ae9bba42cf4985addc5e3bdec5c, type: 3}
-      propertyPath: fieldWrap
-      value: 
-      objectReference: {fileID: 787793324}
     - target: {fileID: 6821994684439353490, guid: eea58ae9bba42cf4985addc5e3bdec5c, type: 3}
       propertyPath: m_Name
       value: Player

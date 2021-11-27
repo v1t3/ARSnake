@@ -19,13 +19,14 @@ namespace Game.Scripts.PlayerBase
         private Vector2Int _startDirection = Vector2Int.up;
         private Vector2Int _currentDirection;
 
-        [SerializeField] private List<Transform> parts = new List<Transform>();
-
-        [HideInInspector] public List<Vector2Int> positions = new List<Vector2Int>();
-        private List<Transform> _startParts = new List<Transform>();
+        private List<Transform> _parts = new List<Transform>();
+        [SerializeField] private List<Transform> startParts = new List<Transform>();
+        private List<Vector2Int> _positions = new List<Vector2Int>();
         private List<Vector2Int> _startPositions = new List<Vector2Int>();
 
         private float _timer;
+
+        public List<Vector2Int> Positions => _positions;
 
         private void Awake()
         {
@@ -93,7 +94,7 @@ namespace Game.Scripts.PlayerBase
 
         private void UpdatePositions()
         {
-            Vector2Int firstPos = positions[0];
+            Vector2Int firstPos = _positions[0];
             firstPos += _currentDirection;
 
             if (firstPos.x >= _gameManager.fieldHeight)
@@ -114,13 +115,13 @@ namespace Game.Scripts.PlayerBase
                 firstPos.y = _gameManager.fieldWidth - 1;
             }
 
-            positions.Insert(0, firstPos);
-            positions.RemoveAt(positions.Count - 1);
+            _positions.Insert(0, firstPos);
+            _positions.RemoveAt(_positions.Count - 1);
 
             //update parts positions
-            for (int i = 0, len = positions.Count; i < len; i++)
+            for (int i = 0, len = _positions.Count; i < len; i++)
             {
-                parts[i].localPosition = new Vector3(positions[i].x, positions[i].y, 0);
+                _parts[i].localPosition = new Vector3(_positions[i].x, _positions[i].y, 0);
             }
 
             if (CheckSelfIntersection(firstPos))
@@ -175,19 +176,19 @@ namespace Game.Scripts.PlayerBase
 
         private void AddTail()
         {
-            var newPos = positions[positions.Count - 1];
+            var newPos = _positions[_positions.Count - 1];
             var newTailPart = Instantiate(tailPrefab, gameObject.transform);
             newTailPart.transform.localPosition = new Vector3(newPos.x, newPos.y, 0);
 
-            parts.Add(newTailPart.transform);
-            positions.Add(positions[positions.Count - 1]);
+            _parts.Add(newTailPart.transform);
+            _positions.Add(_positions[_positions.Count - 1]);
         }
 
         private bool CheckSelfIntersection(Vector2Int newPosition)
         {
-            for (int i = 1; i < positions.Count; i++)
+            for (int i = 1; i < _positions.Count; i++)
             {
-                if (positions[i] == newPosition)
+                if (_positions[i] == newPosition)
                 {
                     return true;
                 }
@@ -216,22 +217,28 @@ namespace Game.Scripts.PlayerBase
 
         private void SetStartData()
         {
-            foreach (var part in parts)
+            foreach (var part in startParts)
             {
                 var partPos = part.transform.localPosition;
-                positions.Add(new Vector2Int((int)partPos.x, (int)partPos.y));
+                _positions.Add(new Vector2Int((int)partPos.x, (int)partPos.y));
             }
 
-            _startParts = new List<Transform>(parts);
-            _startPositions = new List<Vector2Int>(positions);
+            _parts = new List<Transform>(startParts);
+            _startPositions = new List<Vector2Int>(_positions);
             _currentDirection = _startDirection;
         }
 
+        /**
+         * Using in SpeedUp Button
+         */
         public void SetNormalStep()
         {
             _stepDelay = normalStepDelay;
         }
 
+        /**
+         * Using in SpeedUp Button
+         */
         public void SetFastStep()
         {
             _stepDelay = fastStepDelay;
@@ -239,24 +246,15 @@ namespace Game.Scripts.PlayerBase
 
         public void ResetMove()
         {
-            for (int i = parts.Count - 1; i >= 0; i--)
+            foreach (var part in _parts)
             {
-                if (_startParts.Contains(parts[i])) continue;
+                if (startParts.Contains(part)) continue;
 
-                Destroy(parts[i].gameObject);
-                parts.RemoveAt(i);
+                Destroy(part.gameObject);
             }
-
-            positions = new List<Vector2Int>();
-
-            for (var i = 0; i < _startPositions.Count; i++)
-            {
-                var position = _startPositions[i];
-                positions.Add(position);
-
-                parts[i].localPosition = new Vector3(position.x, position.y, 0);
-            }
-
+            
+            _parts = new List<Transform>(startParts);
+            _positions = new List<Vector2Int>(_startPositions);
             _currentDirection = _startDirection;
         }
     }
