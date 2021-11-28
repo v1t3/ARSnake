@@ -53,8 +53,9 @@ namespace Game.Scripts
         {
             SetFieldParameters();
             _placeManager.DisablePlacement();
+            _menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
         }
-
+        
         private void Update()
         {
             if (Input.GetKey("escape"))
@@ -77,6 +78,7 @@ namespace Game.Scripts
             
             _placeManager.ResetPosition();
             _resourceContainer.Reset();
+            _menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
             player.gameObject.SetActive(false);
             
             IsGameActive = false;
@@ -102,6 +104,8 @@ namespace Game.Scripts
             
             PrepareMode = false;
             IsGameActive = true;
+            _resourceContainer.UpdateHighScore();
+            _menuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
         }
 
         public void RestartGame()
@@ -155,6 +159,10 @@ namespace Game.Scripts
             IsGameActive = false;
             _menuManager.playMenuPanel.SetActive(false);
             _menuManager.gameOverMenuPanel.SetActive(true);
+            
+            _menuManager.UpdateScoreText(_resourceContainer.PointsCount);
+            _resourceContainer.UpdateHighScore();
+            _menuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
         }
 
         public void Exit()

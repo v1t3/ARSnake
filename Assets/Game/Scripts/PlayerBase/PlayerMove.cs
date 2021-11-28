@@ -7,6 +7,7 @@ namespace Game.Scripts.PlayerBase
     public class PlayerMove : MonoBehaviour
     {
         private GameManager _gameManager;
+        private MenuManager _menuManager;
         private FoodCreator _foodCreator;
         private Player _player;
         private ResourceContainer _resourceContainer;
@@ -32,6 +33,7 @@ namespace Game.Scripts.PlayerBase
         {
             _gameManager = FindObjectOfType<GameManager>();
             _foodCreator = FindObjectOfType<FoodCreator>();
+            _menuManager = FindObjectOfType<MenuManager>();
             _player = FindObjectOfType<Player>();
             _resourceContainer = FindObjectOfType<ResourceContainer>();
         }
@@ -208,6 +210,7 @@ namespace Game.Scripts.PlayerBase
                 if (food)
                 {
                     _resourceContainer.UpdatePoints(food.Points);
+                    _menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
                 }
 
                 _foodCreator.DestroyFood(position);

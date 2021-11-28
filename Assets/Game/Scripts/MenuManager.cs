@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Scripts
 {
     public class MenuManager : MonoBehaviour
     {
-        [Header("Managers")]
-        [SerializeField] private GameManager gameManager;
-        [SerializeField] private PlaceManager placeManager;
-
         [Header("Panels")]
         public GameObject startMenuPanel;
         public GameObject prepareMenuPanel;
@@ -18,5 +15,27 @@ namespace Game.Scripts
         
         [Header("Menus")]
         public GameObject prepareBottomMenu;
+        
+        [Header("Resource Texts")]
+        [SerializeField] private Text pointsCountText;
+        [SerializeField] private Text scoreCountText;
+        [SerializeField] private Text highScorePlayText;
+        [SerializeField] private Text highScoreGameOverText;
+
+        public void UpdatePointCountText(int value)
+        {
+            pointsCountText.text = value.ToString();
+        }
+
+        public void UpdateScoreText(int value)
+        {
+            scoreCountText.text = value.ToString();
+        }
+        
+        public void UpdateHighScoreText(int value)
+        {
+            highScorePlayText.text = value.ToString();
+            highScoreGameOverText.text = value.ToString();
+        }
     }
 }
