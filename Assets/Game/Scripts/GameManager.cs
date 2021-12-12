@@ -1,5 +1,5 @@
-using Game.Scripts.PlayerBase;
 using Game.Scripts.Resources;
+using Game.Scripts.Units;
 using UnityEngine;
 
 namespace Game.Scripts
@@ -11,8 +11,8 @@ namespace Game.Scripts
         private PlaceManager _placeManager;
         private ResourceContainer _resourceContainer;
         
-        [SerializeField] private Player player;
-        [SerializeField] private PlayerMove playerMove;
+        [SerializeField] private Snake player;
+        [SerializeField] private SnakeMovement playerMove;
 
         [SerializeField] private GameObject background;
 

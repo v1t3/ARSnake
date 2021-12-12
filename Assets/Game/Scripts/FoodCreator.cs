@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Game.Scripts.PlayerBase;
+using Game.Scripts.Units;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,7 +9,7 @@ namespace Game.Scripts
     public class FoodCreator : MonoBehaviour
     {
         [SerializeField] private GameManager gameManager;
-        [SerializeField] private PlayerMove playerMove;
+        [SerializeField] private SnakeMovement playerMove;
 
         [SerializeField] private GameObject parent;
 
