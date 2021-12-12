@@ -63,3 +63,5 @@ crashlytics-build.properties
 com.kyrylokuzyk.arfoundationremote
 ARFoundationRemoteInstaller
 ARFoundationRemoteCompanionApp
+
+/Packages/com.unity.xr.arfoundation@4.1.7/

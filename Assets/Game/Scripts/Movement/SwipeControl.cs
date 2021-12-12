@@ -36,7 +36,6 @@ namespace Game.Scripts.Movement
         private SwipeDirection _currentDirection = SwipeDirection.None;
         private SwipeState _swipeState = SwipeState.Default;
         
-        private bool _swipeLeft, _swipeRight, _swipeUp, _swipeDown;
         private bool _isDragging;
         
         private Vector2 _startTouch, _swipeDelta;
@@ -57,9 +56,7 @@ namespace Game.Scripts.Movement
 
         private void CheckSwipe()
         {
-            // _currentDirection = SwipeDirection.None;
-            // _swipeState = SwipeState.Default;
-            _swipeDown = _swipeUp = _swipeLeft = _swipeRight = false;
+            _currentDirection = SwipeDirection.None;
 
             #region Editor mouse swipes
 
@@ -127,22 +124,22 @@ namespace Game.Scripts.Movement
                 {
                     if (x < 0)
                     {
-                        _swipeLeft = true;
+                        _currentDirection = SwipeDirection.Left;
                     }
                     else
                     {
-                        _swipeRight = true;
+                        _currentDirection = SwipeDirection.Right;
                     }
                 }
                 else
                 {
                     if (y < 0)
                     {
-                        _swipeDown = true;
+                        _currentDirection = SwipeDirection.Down;
                     }
                     else
                     {
-                        _swipeUp = true;
+                        _currentDirection = SwipeDirection.Up;
                     }
                 }
 
@@ -153,19 +150,19 @@ namespace Game.Scripts.Movement
 
         private void CheckSwipeDirection()
         {
-            if (_swipeUp)
+            if (_currentDirection == SwipeDirection.Up)
             {
                 MoveUp();
             }
-            else if (_swipeDown)
+            else if (_currentDirection == SwipeDirection.Down)
             {
                 MoveDown();
             }
-            else if (_swipeLeft)
+            else if (_currentDirection == SwipeDirection.Left)
             {
                 MoveLeft();
             }
-            else if (_swipeRight)
+            else if (_currentDirection == SwipeDirection.Right)
             {
                 MoveRight();
             }
