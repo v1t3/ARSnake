@@ -35,9 +35,7 @@ namespace Game.Scripts.Movement
 
         private SwipeDirection _currentDirection = SwipeDirection.None;
         private SwipeState _swipeState = SwipeState.Default;
-        
-        private bool _isDragging;
-        
+
         private Vector2 _startTouch, _swipeDelta;
 
         private float _tapTimer;
@@ -62,8 +60,7 @@ namespace Game.Scripts.Movement
 
             if (Input.GetMouseButtonDown(0))
             {
-                // _swipeState = SwipeState.Tap;
-                _isDragging = true;
+                _swipeState = SwipeState.Dragging;
                 _startTouch = Input.mousePosition;
             }
             else if (Input.GetMouseButtonUp(0))
@@ -79,8 +76,7 @@ namespace Game.Scripts.Movement
             {
                 if (Input.touches[0].phase == TouchPhase.Began)
                 {
-                    // _swipeState = SwipeState.Tap;
-                    _isDragging = true;
+                    _swipeState = SwipeState.Dragging;
                     _startTouch = Input.touches[0].position;
                 }
                 else if (
@@ -100,7 +96,7 @@ namespace Game.Scripts.Movement
             // {
             // }
             
-            if (_isDragging)
+            if (_swipeState == SwipeState.Dragging)
             {
                 if (Input.touches.Length > 0)
                 {
@@ -171,7 +167,7 @@ namespace Game.Scripts.Movement
         private void ResetSwipe()
         {
             _startTouch = _swipeDelta = Vector2.zero;
-            _isDragging = false;
+            _swipeState = SwipeState.Default;
         }
 
         public void MoveUp()
