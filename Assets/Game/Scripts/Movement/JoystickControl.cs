@@ -3,37 +3,31 @@ using UnityEngine;
 
 namespace Game.Scripts.Movement
 {
-    public enum FieldDirection
-    {
-        Forward,
-        Left,
-        Right,
-        Back
-    }
-    
     public class JoystickControl : MonoBehaviour, IControl
     {
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform gameFieldTransform;
-        
+
         [SerializeField] private SnakeMovement snakeMovement;
 
         public void MoveUp()
         {
             var direction = GetFieldDirection();
 
-            if (direction == FieldDirection.Forward)
+            switch (direction)
             {
-                snakeMovement.MoveUp();
-            } else if (direction == FieldDirection.Right)
-            {
-                snakeMovement.MoveRight();
-            } else if (direction == FieldDirection.Left)
-            {
-                snakeMovement.MoveLeft();
-            } else
-            {
-                snakeMovement.MoveDown();
+                case FieldDirection.Forward:
+                    snakeMovement.MoveUp();
+                    break;
+                case FieldDirection.Right:
+                    snakeMovement.MoveRight();
+                    break;
+                case FieldDirection.Left:
+                    snakeMovement.MoveLeft();
+                    break;
+                default:
+                    snakeMovement.MoveDown();
+                    break;
             }
         }
 
@@ -41,18 +35,20 @@ namespace Game.Scripts.Movement
         {
             var direction = GetFieldDirection();
 
-            if (direction == FieldDirection.Forward)
+            switch (direction)
             {
-                snakeMovement.MoveDown();
-            } else if (direction == FieldDirection.Right)
-            {
-                snakeMovement.MoveLeft();
-            } else if (direction == FieldDirection.Left)
-            {
-                snakeMovement.MoveRight();
-            } else
-            {
-                snakeMovement.MoveUp();
+                case FieldDirection.Forward:
+                    snakeMovement.MoveDown();
+                    break;
+                case FieldDirection.Right:
+                    snakeMovement.MoveLeft();
+                    break;
+                case FieldDirection.Left:
+                    snakeMovement.MoveRight();
+                    break;
+                default:
+                    snakeMovement.MoveUp();
+                    break;
             }
         }
 
@@ -60,18 +56,20 @@ namespace Game.Scripts.Movement
         {
             var direction = GetFieldDirection();
 
-            if (direction == FieldDirection.Forward)
+            switch (direction)
             {
-                snakeMovement.MoveLeft();
-            } else if (direction == FieldDirection.Right)
-            {
-                snakeMovement.MoveUp();
-            } else if (direction == FieldDirection.Left)
-            {
-                snakeMovement.MoveDown();
-            } else
-            {
-                snakeMovement.MoveRight();
+                case FieldDirection.Forward:
+                    snakeMovement.MoveLeft();
+                    break;
+                case FieldDirection.Right:
+                    snakeMovement.MoveUp();
+                    break;
+                case FieldDirection.Left:
+                    snakeMovement.MoveDown();
+                    break;
+                default:
+                    snakeMovement.MoveRight();
+                    break;
             }
         }
 
@@ -79,18 +77,20 @@ namespace Game.Scripts.Movement
         {
             var direction = GetFieldDirection();
 
-            if (direction == FieldDirection.Forward)
+            switch (direction)
             {
-                snakeMovement.MoveRight();
-            } else if (direction == FieldDirection.Right)
-            {
-                snakeMovement.MoveDown();
-            } else if (direction == FieldDirection.Left)
-            {
-                snakeMovement.MoveUp();
-            } else
-            {
-                snakeMovement.MoveLeft();
+                case FieldDirection.Forward:
+                    snakeMovement.MoveRight();
+                    break;
+                case FieldDirection.Right:
+                    snakeMovement.MoveDown();
+                    break;
+                case FieldDirection.Left:
+                    snakeMovement.MoveUp();
+                    break;
+                default:
+                    snakeMovement.MoveLeft();
+                    break;
             }
         }
 
@@ -112,7 +112,7 @@ namespace Game.Scripts.Movement
 
         private FieldDirection GetFieldDirection()
         {
-            var angle = GetAngleToTarget();
+            var angle = GetAngleCameraToField();
 
             if (angle > -45 && angle < 45)
             {
@@ -132,27 +132,17 @@ namespace Game.Scripts.Movement
             return FieldDirection.Back;
         }
 
-        private float GetAngleToTarget()
+        private float GetAngleCameraToField()
         {
             Vector3 toTarget = gameFieldTransform.forward;
             toTarget.y = 0;
             Vector3 cameraForward = cameraTransform.forward;
             cameraForward.y = 0;
-            
-            var angle = Vector3.Angle(toTarget, cameraForward);
-            // Debug.Log("angle " + angle);
-            
-            Vector3 cross = Vector3.Cross(toTarget, cameraForward);
-            // Debug.Log("cross " + cross);
-            
-            if (cross.y < 0)
-            {
-                angle = -angle;
-            }
-            
-            // Debug.Log("angle " + angle);
 
-            return angle;
+            float angle = Vector3.Angle(toTarget, cameraForward);
+            Vector3 cross = Vector3.Cross(toTarget, cameraForward);
+
+            return (cross.y < 0) ? -angle : angle;
         }
     }
 }

@@ -2693,7 +2693,7 @@ MonoBehaviour:
   gameFieldTransform: {fileID: 1691024506}
   snakeMovement: {fileID: 8890506399491806164}
   swipeDeadZone: 90
-  swipeTapMinTime: 0.2
+  tapMinTime: 0.5
 --- !u!1 &561747609
 GameObject:
   m_ObjectHideFlags: 0

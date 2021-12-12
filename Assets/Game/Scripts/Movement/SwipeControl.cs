@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Scripts.Units;
+﻿using Game.Scripts.Units;
 using UnityEngine;
 
 namespace Game.Scripts.Movement
@@ -8,10 +7,9 @@ namespace Game.Scripts.Movement
     {
         Default,
         Tap,
-        Dragging,
-        LongTap
+        Dragging
     }
-    
+
     public enum SwipeDirection
     {
         None,
@@ -30,14 +28,15 @@ namespace Game.Scripts.Movement
 
         [SerializeField] private SnakeMovement snakeMovement;
 
-        [SerializeField] private float swipeDeadZone = 100;
-        [SerializeField] private float swipeTapMinTime = 0.2f;
+        [SerializeField] private float swipeDeadZone = 90;
+        [SerializeField] private float tapMinTime = 0.5f;
 
         private SwipeDirection _currentDirection = SwipeDirection.None;
         private SwipeState _swipeState = SwipeState.Default;
 
         private Vector2 _startTouch, _swipeDelta;
 
+        private bool _isPressed;
         private float _tapTimer;
 
         private void Awake()
@@ -60,7 +59,7 @@ namespace Game.Scripts.Movement
 
             if (Input.GetMouseButtonDown(0))
             {
-                _swipeState = SwipeState.Dragging;
+                _isPressed = true;
                 _startTouch = Input.mousePosition;
             }
             else if (Input.GetMouseButtonUp(0))
@@ -76,7 +75,7 @@ namespace Game.Scripts.Movement
             {
                 if (Input.touches[0].phase == TouchPhase.Began)
                 {
-                    _swipeState = SwipeState.Dragging;
+                    _isPressed = true;
                     _startTouch = Input.touches[0].position;
                 }
                 else if (
@@ -92,75 +91,83 @@ namespace Game.Scripts.Movement
 
             _swipeDelta = Vector2.zero;
 
-            // if (_swipeState == SwipeState.Tap)
-            // {
-            // }
-            
-            if (_swipeState == SwipeState.Dragging)
+            if (_isPressed)
             {
                 if (Input.touches.Length > 0)
                 {
                     _swipeDelta = Input.touches[0].position - _startTouch;
-                    
                 }
                 else if (Input.GetMouseButton(0))
                 {
                     _swipeDelta = (Vector2)Input.mousePosition - _startTouch;
                 }
-                
-                Debug.Log("delta " + _swipeDelta.magnitude);
-            }
-                
-            if (_swipeDelta.magnitude > swipeDeadZone)
-            {
-                float x = _swipeDelta.x;
-                float y = _swipeDelta.y;
 
-                if (Mathf.Abs(x) > Mathf.Abs(y))
+                if (_swipeDelta.magnitude > 0)
                 {
-                    if (x < 0)
-                    {
-                        _currentDirection = SwipeDirection.Left;
-                    }
-                    else
-                    {
-                        _currentDirection = SwipeDirection.Right;
-                    }
+                    _swipeState = SwipeState.Dragging;
                 }
                 else
                 {
-                    if (y < 0)
-                    {
-                        _currentDirection = SwipeDirection.Down;
-                    }
-                    else
-                    {
-                        _currentDirection = SwipeDirection.Up;
-                    }
+                    _swipeState = SwipeState.Tap;
                 }
+            }
 
-                CheckSwipeDirection();
-                ResetSwipe();
+            switch (_swipeState)
+            {
+                case SwipeState.Tap:
+                {
+                    _tapTimer += Time.deltaTime;
+
+                    if (_tapTimer > tapMinTime)
+                    {
+                        SetFastSpeed();
+                    }
+
+                    break;
+                }
+                case SwipeState.Dragging:
+                {
+                    ResetTap();
+
+                    if (_swipeDelta.magnitude > swipeDeadZone)
+                    {
+                        float x = _swipeDelta.x;
+                        float y = _swipeDelta.y;
+
+                        if (Mathf.Abs(x) > Mathf.Abs(y))
+                        {
+                            _currentDirection = x < 0 ? SwipeDirection.Left : SwipeDirection.Right;
+                        }
+                        else
+                        {
+                            _currentDirection = y < 0 ? SwipeDirection.Down : SwipeDirection.Up;
+                        }
+
+                        CheckSwipeDirection();
+                        ResetSwipe();
+                    }
+
+                    break;
+                }
             }
         }
 
         private void CheckSwipeDirection()
         {
-            if (_currentDirection == SwipeDirection.Up)
+            switch (_currentDirection)
             {
-                MoveUp();
-            }
-            else if (_currentDirection == SwipeDirection.Down)
-            {
-                MoveDown();
-            }
-            else if (_currentDirection == SwipeDirection.Left)
-            {
-                MoveLeft();
-            }
-            else if (_currentDirection == SwipeDirection.Right)
-            {
-                MoveRight();
+                case SwipeDirection.Up:
+                    MoveUp();
+                    break;
+                case SwipeDirection.Down:
+                    MoveDown();
+                    break;
+                case SwipeDirection.Left:
+                    MoveLeft();
+                    break;
+                case SwipeDirection.Right:
+                    MoveRight();
+                    break;
             }
         }
 
@@ -168,93 +175,98 @@ namespace Game.Scripts.Movement
         {
             _startTouch = _swipeDelta = Vector2.zero;
             _swipeState = SwipeState.Default;
+            _isPressed = false;
+
+            ResetTap();
+        }
+
+        private void ResetTap()
+        {
+            _tapTimer = 0;
+            SetNormalSpeed();
         }
 
         public void MoveUp()
         {
-            var angle = GetAngleToTarget();
+            var direction = GetFieldDirection();
 
-            if (angle > -45 && angle < 45)
+            switch (direction)
             {
-                snakeMovement.MoveUp();
-            }
-            else if (angle >= 45 && angle < 105)
-            {
-                snakeMovement.MoveRight();
-            }
-            else if (angle <= -45 && angle > -105)
-            {
-                snakeMovement.MoveLeft();
-            }
-            else
-            {
-                snakeMovement.MoveDown();
+                case FieldDirection.Forward:
+                    snakeMovement.MoveUp();
+                    break;
+                case FieldDirection.Right:
+                    snakeMovement.MoveRight();
+                    break;
+                case FieldDirection.Left:
+                    snakeMovement.MoveLeft();
+                    break;
+                default:
+                    snakeMovement.MoveDown();
+                    break;
             }
         }
 
         public void MoveDown()
         {
-            var angle = GetAngleToTarget();
+            var direction = GetFieldDirection();
 
-            if (angle > -45 && angle < 45)
+            switch (direction)
             {
-                snakeMovement.MoveDown();
-            }
-            else if (angle >= 45 && angle < 105)
-            {
-                snakeMovement.MoveLeft();
-            }
-            else if (angle <= -45 && angle > -105)
-            {
-                snakeMovement.MoveRight();
-            }
-            else
-            {
-                snakeMovement.MoveUp();
+                case FieldDirection.Forward:
+                    snakeMovement.MoveDown();
+                    break;
+                case FieldDirection.Right:
+                    snakeMovement.MoveLeft();
+                    break;
+                case FieldDirection.Left:
+                    snakeMovement.MoveRight();
+                    break;
+                default:
+                    snakeMovement.MoveUp();
+                    break;
             }
         }
 
         public void MoveLeft()
         {
-            var angle = GetAngleToTarget();
+            var direction = GetFieldDirection();
 
-            if (angle > -45 && angle < 45)
+            switch (direction)
             {
-                snakeMovement.MoveLeft();
-            }
-            else if (angle >= 45 && angle < 105)
-            {
-                snakeMovement.MoveUp();
-            }
-            else if (angle <= -45 && angle > -105)
-            {
-                snakeMovement.MoveDown();
-            }
-            else
-            {
-                snakeMovement.MoveRight();
+                case FieldDirection.Forward:
+                    snakeMovement.MoveLeft();
+                    break;
+                case FieldDirection.Right:
+                    snakeMovement.MoveUp();
+                    break;
+                case FieldDirection.Left:
+                    snakeMovement.MoveDown();
+                    break;
+                default:
+                    snakeMovement.MoveRight();
+                    break;
             }
         }
 
         public void MoveRight()
         {
-            var angle = GetAngleToTarget();
+            var direction = GetFieldDirection();
 
-            if (angle > -45 && angle < 45)
+            switch (direction)
             {
-                snakeMovement.MoveRight();
-            }
-            else if (angle >= 45 && angle < 105)
-            {
-                snakeMovement.MoveDown();
-            }
-            else if (angle <= -45 && angle > -105)
-            {
-                snakeMovement.MoveUp();
-            }
-            else
-            {
-                snakeMovement.MoveLeft();
+                case FieldDirection.Forward:
+                    snakeMovement.MoveRight();
+                    break;
+                case FieldDirection.Right:
+                    snakeMovement.MoveDown();
+                    break;
+                case FieldDirection.Left:
+                    snakeMovement.MoveUp();
+                    break;
+                default:
+                    snakeMovement.MoveLeft();
+                    break;
             }
         }
 
@@ -268,27 +280,39 @@ namespace Game.Scripts.Movement
             snakeMovement.SetFastStep();
         }
 
-        private float GetAngleToTarget()
+        private FieldDirection GetFieldDirection()
+        {
+            var angle = GetAngleCameraToField();
+
+            if (angle > -45 && angle < 45)
+            {
+                return FieldDirection.Forward;
+            }
+
+            if (angle >= 45 && angle < 105)
+            {
+                return FieldDirection.Right;
+            }
+
+            if (angle <= -45 && angle > -105)
+            {
+                return FieldDirection.Left;
+            }
+
+            return FieldDirection.Back;
+        }
+
+        private float GetAngleCameraToField()
         {
             Vector3 toTarget = gameFieldTransform.forward;
             toTarget.y = 0;
             Vector3 cameraForward = cameraTransform.forward;
             cameraForward.y = 0;
 
-            var angle = Vector3.Angle(toTarget, cameraForward);
-            // Debug.Log("angle " + angle);
-
+            float angle = Vector3.Angle(toTarget, cameraForward);
             Vector3 cross = Vector3.Cross(toTarget, cameraForward);
-            // Debug.Log("cross " + cross);
 
-            if (cross.y < 0)
-            {
-                angle = -angle;
-            }
-
-            // Debug.Log("angle " + angle);
-
-            return angle;
+            return (cross.y < 0) ? -angle : angle;
         }
     }
 }
