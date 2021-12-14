@@ -1,4 +1,5 @@
 using Game.Scripts.Resources;
+using Game.Scripts.Settings;
 using Game.Scripts.Units;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Game.Scripts
         private PlaceManager _placeManager;
         private ResourceContainer _resourceContainer;
         private MarkerController _markerController;
+        private GameSettings _gameSettings;
         
         [SerializeField] private Snake player;
         [SerializeField] private SnakeMovement playerMove;
@@ -49,6 +51,7 @@ namespace Game.Scripts
             _placeManager = FindObjectOfType<PlaceManager>();
             _resourceContainer = FindObjectOfType<ResourceContainer>();
             _markerController = FindObjectOfType<MarkerController>();
+            _gameSettings = FindObjectOfType<GameSettings>();
         }
 
         private void Start()
@@ -123,12 +126,14 @@ namespace Game.Scripts
 
         public void ShowSettings()
         {
+            _gameSettings.LoadGameSettings();
             _menuManager.settingsMenuPanel.SetActive(true);
             _menuManager.startMenuPanel.SetActive(false);
         }
 
         public void HideSettings()
         {
+            _gameSettings.SaveGameSettings();
             _menuManager.settingsMenuPanel.SetActive(false);
             _menuManager.startMenuPanel.SetActive(true);
         }

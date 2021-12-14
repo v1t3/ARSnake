@@ -5144,7 +5144,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2038681587}
         m_TargetAssemblyTypeName: Game.Scripts.Settings.Settings, Assembly-CSharp
-        m_MethodName: ToggleGrid
+        m_MethodName: SetIsGridEnabled
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8624,7 +8624,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3231c4586234a2e923e2fcb7ae1e71b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridToggle: {fileID: 1243620295}
   grid: {fileID: 1370253310}
+  inputTypeDropdown: {fileID: 1412403520}
   inputTypes:
   - {fileID: 605234918}
   - {fileID: 557629371}
@@ -8736,7 +8738,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6916fe32b2394942b2521d9afc0f6d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  marker: {fileID: 668022262}
   fieldToPlace: {fileID: 1691024505}
 --- !u!4 &2048666626
 Transform:
