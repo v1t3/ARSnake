@@ -7,8 +7,8 @@ namespace Game.Scripts
     {
         private GameManager _gameManager;
         private MenuManager _menuManager;
-
-        [SerializeField] private GameObject marker;
+        private MarkerController _markerController;
+        
         [SerializeField] private GameObject fieldToPlace;
 
         private Vector3 _initScale;
@@ -18,6 +18,7 @@ namespace Game.Scripts
         {
             _gameManager = FindObjectOfType<GameManager>();
             _menuManager = FindObjectOfType<MenuManager>();
+            _markerController = FindObjectOfType<MarkerController>();
         }
 
         private void Update()
@@ -33,9 +34,13 @@ namespace Game.Scripts
             {
                 PlaceParentField();
             }
-            
+
             //todo test
-            if (!_gameManager.IsFieldPlaced && Input.GetMouseButtonDown(0) && Input.touchCount == 0)
+            if (
+                !_gameManager.IsFieldPlaced &&
+                Input.GetMouseButtonDown(0) && 
+                Input.touchCount == 0
+            )
             {
                 PlaceParentField();
             }
@@ -43,14 +48,16 @@ namespace Game.Scripts
 
         private void PlaceParentField()
         {
-            fieldToPlace.transform.position = marker.transform.position;
-            fieldToPlace.transform.rotation = marker.transform.rotation;
-            fieldToPlace.transform.localScale = marker.transform.localScale;
+            var markerTransform = _markerController.Marker.transform;
             
+            fieldToPlace.transform.position = markerTransform.position;
+            fieldToPlace.transform.rotation = markerTransform.rotation;
+            fieldToPlace.transform.localScale = markerTransform.localScale;
+
             fieldToPlace.SetActive(true);
             _gameManager.IsFieldPlaced = true;
-            marker.SetActive(false);
-            
+            _markerController.InstallMarker();
+
             _menuManager.prepareBottomMenu.SetActive(true);
         }
 
@@ -60,20 +67,20 @@ namespace Game.Scripts
         public void ResetPosition()
         {
             _gameManager.IsFieldPlaced = false;
-            
-            marker.SetActive(true);
+
             fieldToPlace.SetActive(false);
-            
+            _markerController.ResetMarker();
+
             _menuManager.prepareBottomMenu.SetActive(false);
         }
 
         public void DisablePlacement()
         {
             _gameManager.IsFieldPlaced = false;
-            
-            marker.SetActive(false);
+
+            _markerController.DisableMarker();
             fieldToPlace.SetActive(false);
-            
+
             _menuManager.prepareBottomMenu.SetActive(false);
         }
     }

@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace Game.Scripts.Movement
 {
-    public class JoystickControl : MonoBehaviour, IControl
+    public class JoystickControl : Control
     {
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform gameFieldTransform;
 
         [SerializeField] private SnakeMovement snakeMovement;
 
-        public void MoveUp()
+        public override void MoveUp()
         {
             var direction = GetFieldDirection();
 
@@ -31,7 +31,7 @@ namespace Game.Scripts.Movement
             }
         }
 
-        public void MoveDown()
+        public override void MoveDown()
         {
             var direction = GetFieldDirection();
 
@@ -52,7 +52,7 @@ namespace Game.Scripts.Movement
             }
         }
 
-        public void MoveLeft()
+        public override void MoveLeft()
         {
             var direction = GetFieldDirection();
 
@@ -73,7 +73,7 @@ namespace Game.Scripts.Movement
             }
         }
 
-        public void MoveRight()
+        public override void MoveRight()
         {
             var direction = GetFieldDirection();
 
@@ -97,7 +97,7 @@ namespace Game.Scripts.Movement
         /**
          * Using in SpeedUp Button
          */
-        public void SetNormalSpeed()
+        public override void SetNormalSpeed()
         {
             snakeMovement.SetNormalStep();
         }
@@ -105,7 +105,7 @@ namespace Game.Scripts.Movement
         /**
          * Using in SpeedUp Button
          */
-        public void SetFastSpeed()
+        public override void SetFastSpeed()
         {
             snakeMovement.SetFastStep();
         }

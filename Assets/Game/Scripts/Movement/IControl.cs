@@ -1,13 +1,5 @@
 ﻿namespace Game.Scripts.Movement
 {
-    public enum FieldDirection
-    {
-        Forward,
-        Left,
-        Right,
-        Back
-    }
-    
     public interface IControl
     {
         public void MoveUp();

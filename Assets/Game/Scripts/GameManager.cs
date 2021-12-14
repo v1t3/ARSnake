@@ -10,6 +10,7 @@ namespace Game.Scripts
         private MenuManager _menuManager;
         private PlaceManager _placeManager;
         private ResourceContainer _resourceContainer;
+        private MarkerController _markerController;
         
         [SerializeField] private Snake player;
         [SerializeField] private SnakeMovement playerMove;
@@ -47,6 +48,7 @@ namespace Game.Scripts
             _menuManager = FindObjectOfType<MenuManager>();
             _placeManager = FindObjectOfType<PlaceManager>();
             _resourceContainer = FindObjectOfType<ResourceContainer>();
+            _markerController = FindObjectOfType<MarkerController>();
         }
 
         private void Start()
@@ -104,6 +106,7 @@ namespace Game.Scripts
             
             PrepareMode = false;
             IsGameActive = true;
+            _markerController.DisableMarker();
             _resourceContainer.UpdateHighScore();
             _menuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
         }

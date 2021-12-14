@@ -19,7 +19,7 @@ namespace Game.Scripts.Movement
         Right
     }
 
-    public class SwipeControl : MonoBehaviour, IControl
+    public class TouchControl : Control
     {
         private GameManager _gameManager;
 
@@ -186,7 +186,7 @@ namespace Game.Scripts.Movement
             SetNormalSpeed();
         }
 
-        public void MoveUp()
+        public override void MoveUp()
         {
             var direction = GetFieldDirection();
 
@@ -207,7 +207,7 @@ namespace Game.Scripts.Movement
             }
         }
 
-        public void MoveDown()
+        public override void MoveDown()
         {
             var direction = GetFieldDirection();
 
@@ -228,7 +228,7 @@ namespace Game.Scripts.Movement
             }
         }
 
-        public void MoveLeft()
+        public override void MoveLeft()
         {
             var direction = GetFieldDirection();
 
@@ -249,7 +249,7 @@ namespace Game.Scripts.Movement
             }
         }
 
-        public void MoveRight()
+        public override void MoveRight()
         {
             var direction = GetFieldDirection();
 
@@ -270,12 +270,12 @@ namespace Game.Scripts.Movement
             }
         }
 
-        public void SetNormalSpeed()
+        public override void SetNormalSpeed()
         {
             snakeMovement.SetNormalStep();
         }
 
-        public void SetFastSpeed()
+        public override void SetFastSpeed()
         {
             snakeMovement.SetFastStep();
         }

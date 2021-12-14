@@ -14,11 +14,17 @@ namespace Game.Scripts
         [SerializeField] private Camera arCamera;
 
         [SerializeField] private GameObject marker;
+        public GameObject Marker => marker;
+        
+        [SerializeField] private MeshRenderer[] markerRenderers;
+        [SerializeField] private Material activeMaterial;
+        [SerializeField] private Material installedMaterial;
 
         private Vector3 _initScale;
         private float _initDistance;
 
         private bool _isPlaced;
+
 
         private void Awake()
         {
@@ -31,6 +37,8 @@ namespace Game.Scripts
             if (!_gameManager.PrepareMode) return;
             if (_gameManager.IsFieldPlaced) return;
             if (EventSystem.current.IsPointerOverGameObject()) return;
+
+            Debug.Log("touch count " + Input.touchCount);
 
             if (Input.touchCount == 2)
             {
@@ -87,6 +95,29 @@ namespace Game.Scripts
                 var delta = currentDistance / _initDistance;
                 marker.transform.localScale = _initScale * delta;
             }
+        }
+
+        public void ResetMarker()
+        {
+            marker.SetActive(true);
+            
+            foreach (var meshRenderer in markerRenderers)
+            {
+                meshRenderer.material = activeMaterial;
+            }
+        }
+
+        public void InstallMarker()
+        {
+            foreach (var meshRenderer in markerRenderers)
+            {
+                meshRenderer.material = installedMaterial;
+            }
+        }
+
+        public void DisableMarker()
+        {
+            marker.SetActive(false);
         }
     }
 }
