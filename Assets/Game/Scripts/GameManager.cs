@@ -2,13 +2,14 @@ using Game.Scripts.Resources;
 using Game.Scripts.Settings;
 using Game.Scripts.Units;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Scripts
 {
     public class GameManager : MonoBehaviour
     {
         private FoodCreator _foodCreator;
-        private MenuManager _menuManager;
+        [SerializeField] private MenuManager menuManager;
         private PlaceManager _placeManager;
         private ResourceContainer _resourceContainer;
         private MarkerController _markerController;
@@ -47,7 +48,7 @@ namespace Game.Scripts
         private void Awake()
         {
             _foodCreator = FindObjectOfType<FoodCreator>();
-            _menuManager = FindObjectOfType<MenuManager>();
+            menuManager = FindObjectOfType<MenuManager>();
             _placeManager = FindObjectOfType<PlaceManager>();
             _resourceContainer = FindObjectOfType<ResourceContainer>();
             _markerController = FindObjectOfType<MarkerController>();
@@ -58,7 +59,7 @@ namespace Game.Scripts
         {
             SetFieldParameters();
             _placeManager.DisablePlacement();
-            _menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
+            menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
         }
         
         private void Update()
@@ -77,13 +78,13 @@ namespace Game.Scripts
 
         public void PrepareGame()
         {
-            _menuManager.startMenuPanel.SetActive(false);
-            _menuManager.prepareMenuPanel.SetActive(true);
-            _menuManager.prepareBottomMenu.SetActive(false);
+            menuManager.startMenuPanel.SetActive(false);
+            menuManager.prepareMenuPanel.SetActive(true);
+            menuManager.prepareBottomMenu.SetActive(false);
             
             _placeManager.ResetPosition();
             _resourceContainer.Reset();
-            _menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
+            menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
             player.gameObject.SetActive(false);
             
             IsGameActive = false;
@@ -92,8 +93,8 @@ namespace Game.Scripts
 
         public void CancelPrepareGame()
         {
-            _menuManager.startMenuPanel.SetActive(true);
-            _menuManager.prepareMenuPanel.SetActive(false);
+            menuManager.startMenuPanel.SetActive(true);
+            menuManager.prepareMenuPanel.SetActive(false);
             
             PrepareMode = false;
             
@@ -102,8 +103,8 @@ namespace Game.Scripts
 
         public void StartGame()
         {
-            _menuManager.prepareMenuPanel.SetActive(false);
-            _menuManager.playMenuPanel.SetActive(true);
+            menuManager.prepareMenuPanel.SetActive(false);
+            menuManager.playMenuPanel.SetActive(true);
             
             player.gameObject.SetActive(true);
             
@@ -111,14 +112,14 @@ namespace Game.Scripts
             IsGameActive = true;
             _markerController.DisableMarker();
             _resourceContainer.UpdateHighScore();
-            _menuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
+            menuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
         }
 
         public void RestartGame()
         {
-            _menuManager.pauseMenuPanel.SetActive(false);
-            _menuManager.playMenuPanel.SetActive(false);
-            _menuManager.gameOverMenuPanel.SetActive(false);
+            menuManager.pauseMenuPanel.SetActive(false);
+            menuManager.playMenuPanel.SetActive(false);
+            menuManager.gameOverMenuPanel.SetActive(false);
 
             ResetGameParams();
             PrepareGame();
@@ -127,35 +128,35 @@ namespace Game.Scripts
         public void ShowSettings()
         {
             _gameSettings.LoadGameSettings();
-            _menuManager.settingsMenuPanel.SetActive(true);
-            _menuManager.startMenuPanel.SetActive(false);
+            menuManager.settingsMenuPanel.SetActive(true);
+            menuManager.startMenuPanel.SetActive(false);
         }
 
         public void HideSettings()
         {
             _gameSettings.SaveGameSettings();
-            _menuManager.settingsMenuPanel.SetActive(false);
-            _menuManager.startMenuPanel.SetActive(true);
+            menuManager.settingsMenuPanel.SetActive(false);
+            menuManager.startMenuPanel.SetActive(true);
         }
 
         public void PauseGame()
         {
             IsGameActive = false;
-            _menuManager.pauseMenuPanel.SetActive(true);
+            menuManager.pauseMenuPanel.SetActive(true);
         }
 
         public void UnpauseGame()
         {
             IsGameActive = true;
-            _menuManager.pauseMenuPanel.SetActive(false);
+            menuManager.pauseMenuPanel.SetActive(false);
         }
 
         public void ReturnToMainMenu()
         {
-            _menuManager.playMenuPanel.SetActive(false);
-            _menuManager.pauseMenuPanel.SetActive(false);
-            _menuManager.gameOverMenuPanel.SetActive(false);
-            _menuManager.startMenuPanel.SetActive(true);
+            menuManager.playMenuPanel.SetActive(false);
+            menuManager.pauseMenuPanel.SetActive(false);
+            menuManager.gameOverMenuPanel.SetActive(false);
+            menuManager.startMenuPanel.SetActive(true);
 
             ResetGameParams();
         }
@@ -165,12 +166,12 @@ namespace Game.Scripts
             Debug.Log("GameOver");
 
             IsGameActive = false;
-            _menuManager.playMenuPanel.SetActive(false);
-            _menuManager.gameOverMenuPanel.SetActive(true);
+            menuManager.playMenuPanel.SetActive(false);
+            menuManager.gameOverMenuPanel.SetActive(true);
             
-            _menuManager.UpdateScoreText(_resourceContainer.PointsCount);
+            menuManager.UpdateScoreText(_resourceContainer.PointsCount);
             _resourceContainer.UpdateHighScore();
-            _menuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
+            menuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
         }
 
         public void Exit()
