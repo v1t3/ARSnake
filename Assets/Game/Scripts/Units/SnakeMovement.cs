@@ -8,9 +8,14 @@ namespace Game.Scripts.Units
     public class SnakeMovement : MonoBehaviour
     {
         private GameManager _gameManager;
-        private MenuManager _menuManager;
         private FoodCreator _foodCreator;
         private ResourceContainer _resourceContainer;
+        
+        private MenuManager _menuManager;
+        public MenuManager MenuManager
+        {
+            set => _menuManager = value;
+        }
 
         [SerializeField] private GameObject tailPrefab;
         [SerializeField] private float normalStepDelay = 0.2f;
@@ -34,7 +39,6 @@ namespace Game.Scripts.Units
         private void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
-            _menuManager = FindObjectOfType<MenuManager>();
             _foodCreator = FindObjectOfType<FoodCreator>();
             _resourceContainer = FindObjectOfType<ResourceContainer>();
         }

@@ -14,7 +14,7 @@ namespace Game.Scripts
         private ResourceContainer _resourceContainer;
         private MarkerController _markerController;
         private GameSettings _gameSettings;
-        
+
         [SerializeField] private Snake player;
         [SerializeField] private SnakeMovement playerMove;
 
@@ -24,21 +24,20 @@ namespace Game.Scripts
         [HideInInspector] public int fieldWidth;
 
         private bool _prepareMode;
-        private bool _isFieldPlaced;
-        private bool _isGameActive;
-
         public bool PrepareMode
         {
             get => _prepareMode;
             private set => _prepareMode = value;
         }
 
+        private bool _isFieldPlaced;
         public bool IsFieldPlaced
         {
             get => _isFieldPlaced;
             set => _isFieldPlaced = value;
         }
-        
+
+        private bool _isGameActive;
         public bool IsGameActive
         {
             get => _isGameActive;
@@ -48,7 +47,6 @@ namespace Game.Scripts
         private void Awake()
         {
             _foodCreator = FindObjectOfType<FoodCreator>();
-            menuManager = FindObjectOfType<MenuManager>();
             _placeManager = FindObjectOfType<PlaceManager>();
             _resourceContainer = FindObjectOfType<ResourceContainer>();
             _markerController = FindObjectOfType<MarkerController>();
@@ -57,17 +55,24 @@ namespace Game.Scripts
 
         private void Start()
         {
+            SetManagers();
             SetFieldParameters();
             _placeManager.DisablePlacement();
             menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
         }
-        
+
         private void Update()
         {
             if (Input.GetKey("escape"))
             {
                 Exit();
             }
+        }
+
+        private void SetManagers()
+        {
+            playerMove.MenuManager = menuManager;
+            _placeManager.MenuManager = menuManager;
         }
 
         private void SetFieldParameters()
@@ -78,36 +83,32 @@ namespace Game.Scripts
 
         public void PrepareGame()
         {
-            menuManager.startMenuPanel.SetActive(false);
-            menuManager.prepareMenuPanel.SetActive(true);
-            menuManager.prepareBottomMenu.SetActive(false);
-            
+            menuManager.ShowPrepareMenu();
+
             _placeManager.ResetPosition();
             _resourceContainer.Reset();
             menuManager.UpdatePointCountText(_resourceContainer.PointsCount);
             player.gameObject.SetActive(false);
-            
+
             IsGameActive = false;
             PrepareMode = true;
         }
 
         public void CancelPrepareGame()
         {
-            menuManager.startMenuPanel.SetActive(true);
-            menuManager.prepareMenuPanel.SetActive(false);
-            
+            menuManager.HidePrepareMenu();
+
             PrepareMode = false;
-            
+
             _placeManager.DisablePlacement();
         }
 
         public void StartGame()
         {
-            menuManager.prepareMenuPanel.SetActive(false);
-            menuManager.playMenuPanel.SetActive(true);
-            
+            menuManager.ShowStartMenu();
+
             player.gameObject.SetActive(true);
-            
+
             PrepareMode = false;
             IsGameActive = true;
             _markerController.DisableMarker();
@@ -117,9 +118,7 @@ namespace Game.Scripts
 
         public void RestartGame()
         {
-            menuManager.pauseMenuPanel.SetActive(false);
-            menuManager.playMenuPanel.SetActive(false);
-            menuManager.gameOverMenuPanel.SetActive(false);
+            menuManager.RestartMenus();
 
             ResetGameParams();
             PrepareGame();
@@ -128,35 +127,30 @@ namespace Game.Scripts
         public void ShowSettings()
         {
             _gameSettings.LoadGameSettings();
-            menuManager.settingsMenuPanel.SetActive(true);
-            menuManager.startMenuPanel.SetActive(false);
+            menuManager.ShowSettingsMenu();
         }
 
         public void HideSettings()
         {
             _gameSettings.SaveGameSettings();
-            menuManager.settingsMenuPanel.SetActive(false);
-            menuManager.startMenuPanel.SetActive(true);
+            menuManager.HideSettingsMenu();
         }
 
         public void PauseGame()
         {
             IsGameActive = false;
-            menuManager.pauseMenuPanel.SetActive(true);
+            menuManager.ShowPauseMenu();
         }
 
         public void UnpauseGame()
         {
             IsGameActive = true;
-            menuManager.pauseMenuPanel.SetActive(false);
+            menuManager.HidePauseMenu();
         }
 
         public void ReturnToMainMenu()
         {
-            menuManager.playMenuPanel.SetActive(false);
-            menuManager.pauseMenuPanel.SetActive(false);
-            menuManager.gameOverMenuPanel.SetActive(false);
-            menuManager.startMenuPanel.SetActive(true);
+            menuManager.ReturnToMainMenu();
 
             ResetGameParams();
         }
@@ -166,9 +160,7 @@ namespace Game.Scripts
             Debug.Log("GameOver");
 
             IsGameActive = false;
-            menuManager.playMenuPanel.SetActive(false);
-            menuManager.gameOverMenuPanel.SetActive(true);
-            
+            menuManager.ShowGameOverMenu();
             menuManager.UpdateScoreText(_resourceContainer.PointsCount);
             _resourceContainer.UpdateHighScore();
             menuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);

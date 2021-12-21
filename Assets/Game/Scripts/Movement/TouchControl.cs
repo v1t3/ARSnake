@@ -1,4 +1,5 @@
-﻿using Game.Scripts.Units;
+﻿using Game.Scripts.Settings;
+using Game.Scripts.Units;
 using UnityEngine;
 
 namespace Game.Scripts.Movement
@@ -22,6 +23,7 @@ namespace Game.Scripts.Movement
     public class TouchControl : Control
     {
         private GameManager _gameManager;
+        private GameSettings _gameSettings;
 
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform gameFieldTransform;
@@ -42,11 +44,13 @@ namespace Game.Scripts.Movement
         private void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
+            _gameSettings = FindObjectOfType<GameSettings>();
         }
 
         private void Update()
         {
             if (!_gameManager.IsGameActive) return;
+            if (!_gameSettings.IsTouch()) return;
 
             CheckSwipe();
         }

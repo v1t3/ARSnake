@@ -6,15 +6,15 @@ namespace Game.Scripts
     public class MenuManager : MonoBehaviour
     {
         [Header("Panels")]
-        public GameObject startMenuPanel;
-        public GameObject prepareMenuPanel;
-        public GameObject playMenuPanel;
-        public GameObject pauseMenuPanel;
-        public GameObject settingsMenuPanel;
-        public GameObject gameOverMenuPanel;
+        [SerializeField] private GameObject startMenuPanel;
+        [SerializeField] private GameObject prepareMenuPanel;
+        [SerializeField] private GameObject playMenuPanel;
+        [SerializeField] private GameObject pauseMenuPanel;
+        [SerializeField] private GameObject settingsMenuPanel;
+        [SerializeField] private GameObject gameOverMenuPanel;
         
         [Header("Menus")]
-        public GameObject prepareBottomMenu;
+        [SerializeField] private GameObject prepareBottomMenu;
         
         [Header("Resource Texts")]
         [SerializeField] private Text pointsCountText;
@@ -36,6 +36,88 @@ namespace Game.Scripts
         {
             highScorePlayText.text = value.ToString();
             highScoreGameOverText.text = value.ToString();
+        }
+
+        public void ShowPrepareMenu()
+        {
+            startMenuPanel.SetActive(false);
+            prepareMenuPanel.SetActive(true);
+            prepareBottomMenu.SetActive(false);
+        }
+
+        public void HidePrepareMenu()
+        {
+            startMenuPanel.SetActive(true);
+            prepareMenuPanel.SetActive(false);
+        }
+
+        public void ShowPrepareBottomMenu()
+        {
+            prepareBottomMenu.SetActive(true);
+        }
+
+        public void HidePrepareBottomMenu()
+        {
+            prepareBottomMenu.SetActive(false);
+        }
+
+        public void RestartMenus()
+        {
+            pauseMenuPanel.SetActive(false);
+            HidePlayMenu();
+            gameOverMenuPanel.SetActive(false);
+        }
+
+        public virtual void ShowStartMenu()
+        {
+            prepareMenuPanel.SetActive(false);
+            ShowPlayMenu();
+        }
+
+        public void ShowPlayMenu()
+        {
+            playMenuPanel.SetActive(true);
+        }
+
+        public void HidePlayMenu()
+        {
+            playMenuPanel.SetActive(false);
+        }
+
+        public virtual void ShowPauseMenu()
+        {
+            pauseMenuPanel.SetActive(true);
+        }
+
+        public virtual void HidePauseMenu()
+        {
+            pauseMenuPanel.SetActive(false);
+        }
+
+        public void ShowSettingsMenu()
+        {
+            settingsMenuPanel.SetActive(true);
+            startMenuPanel.SetActive(false);
+        }
+
+        public void HideSettingsMenu()
+        {
+            settingsMenuPanel.SetActive(false);
+            startMenuPanel.SetActive(true);
+        }
+
+        public void ReturnToMainMenu()
+        {
+            HidePlayMenu();
+            pauseMenuPanel.SetActive(false);
+            gameOverMenuPanel.SetActive(false);
+            startMenuPanel.SetActive(true);
+        }
+
+        public virtual void ShowGameOverMenu()
+        {
+            HidePlayMenu();
+            gameOverMenuPanel.SetActive(true);
         }
     }
 }

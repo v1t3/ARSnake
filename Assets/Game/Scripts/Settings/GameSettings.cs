@@ -54,6 +54,13 @@ namespace Game.Scripts.Settings
             inputTypes[inputTypeId].gameObject.SetActive(true);
         }
 
+        public bool IsTouch()
+        {
+            var inputType = inputTypes[_inputTypeId];
+
+            return inputType.GetType() == typeof(TouchControl) && inputType.gameObject.activeInHierarchy;
+        }
+
         public void LoadGameSettings()
         {
             var gameSettings = LoadData();

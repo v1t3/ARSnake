@@ -6,8 +6,12 @@ namespace Game.Scripts
     public class PlaceManager : MonoBehaviour
     {
         private GameManager _gameManager;
-        private MenuManager _menuManager;
         private MarkerController _markerController;
+        private MenuManager _menuManager;
+        public MenuManager MenuManager
+        {
+            set => _menuManager = value;
+        }
         
         [SerializeField] private GameObject fieldToPlace;
 
@@ -17,7 +21,6 @@ namespace Game.Scripts
         private void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
-            _menuManager = FindObjectOfType<MenuManager>();
             _markerController = FindObjectOfType<MarkerController>();
         }
 
@@ -58,7 +61,7 @@ namespace Game.Scripts
             _gameManager.IsFieldPlaced = true;
             _markerController.InstallMarker();
 
-            _menuManager.prepareBottomMenu.SetActive(true);
+            _menuManager.ShowPrepareBottomMenu();
         }
 
         /**
@@ -71,7 +74,7 @@ namespace Game.Scripts
             fieldToPlace.SetActive(false);
             _markerController.ResetMarker();
 
-            _menuManager.prepareBottomMenu.SetActive(false);
+            _menuManager.HidePrepareBottomMenu();
         }
 
         public void DisablePlacement()
@@ -81,7 +84,7 @@ namespace Game.Scripts
             _markerController.DisableMarker();
             fieldToPlace.SetActive(false);
 
-            _menuManager.prepareBottomMenu.SetActive(false);
+            _menuManager.HidePrepareBottomMenu();
         }
     }
 }
