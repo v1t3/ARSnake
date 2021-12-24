@@ -38,8 +38,6 @@ namespace Game.Scripts
             if (_gameManager.IsFieldPlaced) return;
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
-            Debug.Log("touch count " + Input.touchCount);
-
             if (Input.touchCount == 2)
             {
                 ScaleMarker();

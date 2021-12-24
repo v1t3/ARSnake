@@ -23,7 +23,6 @@ namespace Game.Scripts.Movement
     public class TouchControl : Control
     {
         private GameManager _gameManager;
-        private GameSettings _gameSettings;
 
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform gameFieldTransform;
@@ -44,13 +43,12 @@ namespace Game.Scripts.Movement
         private void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
-            _gameSettings = FindObjectOfType<GameSettings>();
         }
 
         private void Update()
         {
             if (!_gameManager.IsGameActive) return;
-            if (!_gameSettings.IsTouch()) return;
+            if (!_gameManager.IsTouch()) return;
 
             CheckSwipe();
         }

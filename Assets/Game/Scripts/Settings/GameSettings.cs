@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Game.Scripts.Data;
-using Game.Scripts.Movement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,17 +8,21 @@ namespace Game.Scripts.Settings
 {
     public class GameSettings : MonoBehaviour
     {
+        private GameManager _gameManager;
+        
         [SerializeField] private Toggle gridToggle;
         [SerializeField] private GameObject grid;
-
-        [SerializeField] private Dropdown inputTypeDropdown;
-        [SerializeField] private Control[] inputTypes;
         
         private bool _isGridEnabled;
         public bool IsGridEnabled => _isGridEnabled;
 
         private int _inputTypeId;
         public int InputTypeId => _inputTypeId;
+
+        private void Awake()
+        {
+            _gameManager = FindObjectOfType<GameManager>();
+        }
 
         private void Start()
         {
@@ -28,7 +31,7 @@ namespace Game.Scripts.Settings
             LoadGameSettings();
         }
 
-        public void GetIsGridEnabled()
+        private void GetIsGridEnabled()
         {
             _isGridEnabled = gridToggle.isOn;
         }
@@ -39,26 +42,9 @@ namespace Game.Scripts.Settings
             grid.SetActive(_isGridEnabled);
         }
 
-        public void GetInputType()
+        private void GetInputType()
         {
-            _inputTypeId = inputTypeDropdown.value;
-        }
-
-        public void SetInputType(int inputTypeId)
-        {
-            foreach (var inputType in inputTypes)
-            {
-                inputType.gameObject.SetActive(false);
-            }
-            
-            inputTypes[inputTypeId].gameObject.SetActive(true);
-        }
-
-        public bool IsTouch()
-        {
-            var inputType = inputTypes[_inputTypeId];
-
-            return inputType.GetType() == typeof(TouchControl) && inputType.gameObject.activeInHierarchy;
+            _inputTypeId = (int)_gameManager.GetInputType();
         }
 
         public void LoadGameSettings()
@@ -70,7 +56,7 @@ namespace Game.Scripts.Settings
             _isGridEnabled = gameSettings.IsGridEnabled;
             _inputTypeId = gameSettings.InputTypeId;
 
-            inputTypeDropdown.value = _inputTypeId;
+            _gameManager.SetInputType(_inputTypeId);
             gridToggle.isOn = _isGridEnabled;
         }
 

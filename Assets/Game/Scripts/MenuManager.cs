@@ -5,6 +5,8 @@ namespace Game.Scripts
 {
     public class MenuManager : MonoBehaviour
     {
+        private GameManager _gameManager;
+        
         [Header("Panels")]
         [SerializeField] private GameObject startMenuPanel;
         [SerializeField] private GameObject prepareMenuPanel;
@@ -21,6 +23,15 @@ namespace Game.Scripts
         [SerializeField] private Text scoreCountText;
         [SerializeField] private Text highScorePlayText;
         [SerializeField] private Text highScoreGameOverText;
+        
+        [Header("Input")]
+        [SerializeField] private GameObject joystick;
+        [SerializeField] private Dropdown inputTypeDropdown;
+
+        private void Awake()
+        {
+            _gameManager = FindObjectOfType<GameManager>();
+        }
 
         public void UpdatePointCountText(int value)
         {
@@ -114,10 +125,37 @@ namespace Game.Scripts
             startMenuPanel.SetActive(true);
         }
 
+        public void SetInputType(InputType inputType)
+        {
+            if (inputType == InputType.Buttons)
+            {
+                EnableJoystick();
+            }
+            else
+            {
+                DisableJoystick();
+            }
+
+            inputTypeDropdown.value = (int)inputType;
+        }
+
         public virtual void ShowGameOverMenu()
         {
             HidePlayMenu();
             gameOverMenuPanel.SetActive(true);
+        }
+
+        public virtual void EnableJoystick()
+        {
+            if (_gameManager.GetInputType() == InputType.Buttons)
+            {
+                joystick.gameObject.SetActive(true);
+            }
+        }
+
+        public virtual void DisableJoystick()
+        {
+            joystick.gameObject.SetActive(false);
         }
     }
 }
