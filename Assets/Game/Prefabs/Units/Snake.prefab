@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tailPrefab: {fileID: 9117901375725985078, guid: 7553dfcfb0989dc4eae11036951be5d3, type: 3}
-  normalStepDelay: 0.2
+  normalStepDelay: 0.3
   fastStepDelay: 0.1
   startParts:
   - {fileID: 9183665067799183436}
