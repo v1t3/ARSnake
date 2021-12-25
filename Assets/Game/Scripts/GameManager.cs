@@ -194,6 +194,7 @@ namespace Game.Scripts
         public void ReturnToMainMenu()
         {
             _currentMenuManager.ReturnToMainMenu();
+            _currentMenuManager.DisableJoystick();
 
             ResetGameParams();
         }

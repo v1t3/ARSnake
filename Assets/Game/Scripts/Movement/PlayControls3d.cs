@@ -6,8 +6,6 @@ namespace Game.Scripts.Movement
     {
         [SerializeField] private Camera mainCamera;
 
-        [SerializeField] private float tapMinTime = 0.5f;
-
         private bool _isPressed;
         private Button3d _currentButton;
 

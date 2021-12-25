@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Game.Scripts
 {
@@ -6,6 +7,11 @@ namespace Game.Scripts
     {
         [Header("Resource Texts")] 
         [SerializeField] private GameObject playInfo;
+
+        private void Start()
+        {
+            DisableJoystick();
+        }
 
         public override void ShowStartMenu()
         {

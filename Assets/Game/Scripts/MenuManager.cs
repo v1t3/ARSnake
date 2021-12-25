@@ -131,15 +131,6 @@ namespace Game.Scripts
 
         public void SetInputType(InputType inputType)
         {
-            if (inputType == InputType.Buttons)
-            {
-                EnableJoystick();
-            }
-            else
-            {
-                DisableJoystick();
-            }
-
             inputTypeDropdown.value = (int)inputType;
         }
 
