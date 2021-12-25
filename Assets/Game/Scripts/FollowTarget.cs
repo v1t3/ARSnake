@@ -11,9 +11,7 @@ namespace Game.Scripts
 
         private void LateUpdate()
         {
-            var newPosition = target.position;
-            newPosition.y = 0;
-            transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * lerpSpeed);
+            transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * lerpSpeed);
 
             Quaternion toRotation = Quaternion.Euler(0, target.eulerAngles.y, 0);
             float angle = Quaternion.Angle(transform.rotation, toRotation);

@@ -12,15 +12,10 @@ namespace Game.Scripts
         Touch
     }
 
-    public enum MenuType
-    {
-        Menu2D,
-        Menu3D
-    }
-
     public class GameManager : MonoBehaviour
     {
         private FoodCreator _foodCreator;
+        [SerializeField] private MenuManager currentMenuManager;
         private PlaceManager _placeManager;
         private ResourceContainer _resourceContainer;
         private MarkerController _markerController;
@@ -55,12 +50,7 @@ namespace Game.Scripts
             set => _isGameActive = value;
         }
 
-        private InputType _currentInputType;
-
-        [SerializeField] private MenuManager menuManager2d;
-        [SerializeField] private MenuManager menuManager3d;
-        [SerializeField] private MenuManager _currentMenuManager; //todo
-        [SerializeField] private MenuType _currentMenuType; //todo
+        [SerializeField] private InputType currentInputType;
 
         private void Awake()
         {
@@ -73,9 +63,10 @@ namespace Game.Scripts
 
         private void Start()
         {
+            SetManagers();
             SetFieldParameters();
-            
-            UpdateMenuManagerData();
+            _placeManager.DisablePlacement();
+            currentMenuManager.UpdatePointCountText(_resourceContainer.PointsCount);
         }
 
         private void Update()
@@ -86,28 +77,10 @@ namespace Game.Scripts
             }
         }
 
-        public void OnLoadSettings()
+        private void SetManagers()
         {
-            UpdateMenuManagerData();
-        }
-
-        public void OnSaveSettings()
-        {
-            UpdateMenuManagerData();
-        }
-
-        private void UpdateMenuManagerData()
-        {
-            SetMenuType((int)_currentMenuType);
-            SetMenuManagers();
-            _placeManager.DisablePlacement();
-            _currentMenuManager.UpdatePointCountText(_resourceContainer.PointsCount);
-        }
-
-        private void SetMenuManagers()
-        {
-            playerMove.MenuManager = _currentMenuManager;
-            _placeManager.MenuManager = _currentMenuManager;
+            playerMove.MenuManager = currentMenuManager;
+            _placeManager.MenuManager = currentMenuManager;
         }
 
         private void SetFieldParameters()
@@ -118,12 +91,12 @@ namespace Game.Scripts
 
         public void PrepareGame()
         {
-            _currentMenuManager.ShowPrepareMenu();
+            currentMenuManager.ShowPrepareMenu();
 
             _placeManager.ResetPosition();
             _resourceContainer.Reset();
-            _currentMenuManager.UpdatePointCountText(_resourceContainer.PointsCount);
-            _currentMenuManager.DisableJoystick();
+            currentMenuManager.UpdatePointCountText(_resourceContainer.PointsCount);
+            currentMenuManager.DisableJoystick();
             player.gameObject.SetActive(false);
 
             IsGameActive = false;
@@ -132,7 +105,7 @@ namespace Game.Scripts
 
         public void CancelPrepareGame()
         {
-            _currentMenuManager.HidePrepareMenu();
+            currentMenuManager.HidePrepareMenu();
 
             PrepareMode = false;
 
@@ -141,7 +114,7 @@ namespace Game.Scripts
 
         public void StartGame()
         {
-            _currentMenuManager.ShowStartMenu();
+            currentMenuManager.ShowStartMenu();
 
             player.gameObject.SetActive(true);
 
@@ -150,13 +123,13 @@ namespace Game.Scripts
             _markerController.DisableMarker();
             _resourceContainer.UpdateHighScore();
             
-            _currentMenuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
-            _currentMenuManager.EnableJoystick();
+            currentMenuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
+            currentMenuManager.EnableJoystick();
         }
 
         public void RestartGame()
         {
-            _currentMenuManager.RestartMenus();
+            currentMenuManager.RestartMenus();
 
             ResetGameParams();
             PrepareGame();
@@ -165,81 +138,49 @@ namespace Game.Scripts
         public void ShowSettings()
         {
             _gameSettings.LoadGameSettings();
-            _currentMenuManager.ShowSettingsMenu();
+            currentMenuManager.ShowSettingsMenu();
         }
 
         public void HideSettings()
         {
             _gameSettings.SaveGameSettings();
-            _currentMenuManager.HideSettingsMenu();
+            currentMenuManager.HideSettingsMenu();
         }
 
         public void PauseGame()
         {
             IsGameActive = false;
-            _currentMenuManager.ShowPauseMenu();
+            currentMenuManager.ShowPauseMenu();
         }
 
         public void UnpauseGame()
         {
             IsGameActive = true;
-            _currentMenuManager.HidePauseMenu();
+            currentMenuManager.HidePauseMenu();
         }
 
         public void ReturnToMainMenu()
         {
-            _currentMenuManager.ReturnToMainMenu();
+            currentMenuManager.ReturnToMainMenu();
 
             ResetGameParams();
         }
 
         public InputType GetInputType()
         {
-            return _currentInputType;
+            return currentInputType;
         }
 
         public void SetInputType(int inputTypeId)
         {
-            _currentInputType = (InputType)inputTypeId;
+            currentInputType = (InputType)inputTypeId;
 
-            _currentMenuManager.SetInputType(_currentInputType);
-        }
-
-        public MenuType GetMenuType()
-        {
-            return _currentMenuType;
-        }
-
-        public void SetMenuTypeFromUI(int menuTypeId)
-        {
-            SetMenuType(menuTypeId);
-            _gameSettings.SaveGameSettings();
-            ShowSettings();
-        }
-
-        public void SetMenuType(int menuTypeId)
-        {
-            _currentMenuType = (MenuType)menuTypeId;
-            
-            if (_currentMenuType == MenuType.Menu3D)
-            {
-                _currentMenuManager = menuManager3d;
-                menuManager3d.EnableMenu();
-                menuManager3d.SetMenuTypeDropdown(menuTypeId);
-                menuManager2d.DisableMenu();
-            }
-            else
-            {
-                _currentMenuManager = menuManager2d;
-                menuManager2d.EnableMenu();
-                menuManager2d.SetMenuTypeDropdown(menuTypeId);
-                menuManager3d.DisableMenu();
-            }
+            currentMenuManager.SetInputType(currentInputType);
         }
         
         public bool IsTouch()
         {
-            return _currentInputType == InputType.Touch;
+            return currentInputType == InputType.Touch;
         }
 
         public void GameOver()
@@ -247,10 +188,10 @@ namespace Game.Scripts
             Debug.Log("GameOver");
 
             IsGameActive = false;
-            _currentMenuManager.ShowGameOverMenu();
-            _currentMenuManager.UpdateScoreText(_resourceContainer.PointsCount);
+            currentMenuManager.ShowGameOverMenu();
+            currentMenuManager.UpdateScoreText(_resourceContainer.PointsCount);
             _resourceContainer.UpdateHighScore();
-            _currentMenuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
+            currentMenuManager.UpdateHighScoreText(_resourceContainer.HighScoreCount);
         }
 
         public void Exit()

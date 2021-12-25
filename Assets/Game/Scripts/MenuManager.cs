@@ -6,10 +6,6 @@ namespace Game.Scripts
     public class MenuManager : MonoBehaviour
     {
         private GameManager _gameManager;
-
-        [Header("Menu")]
-        [SerializeField] private GameObject parentMenu;
-        [SerializeField] private Dropdown menuTypeDropdown;
         
         [Header("Panels")]
         [SerializeField] private GameObject startMenuPanel;
@@ -160,21 +156,6 @@ namespace Game.Scripts
         public virtual void DisableJoystick()
         {
             joystick.gameObject.SetActive(false);
-        }
-
-        public void EnableMenu()
-        {
-            parentMenu.SetActive(true);
-        }
-
-        public void DisableMenu()
-        {
-            parentMenu.SetActive(false);
-        }
-
-        public void SetMenuTypeDropdown(int typeId)
-        {
-            menuTypeDropdown.SetValueWithoutNotify(typeId);
         }
     }
 }
