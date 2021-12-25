@@ -21,6 +21,13 @@ namespace Game.Scripts.Settings
 
         private int _menuTypeId;
         public int MenuTypeId => _menuTypeId;
+        
+        // private bool _isARPlaneShowEnabled;
+        // public bool IsARPlaneShowEnabled
+        // {
+        //     get => _isARPlaneShowEnabled;
+        //     set => _isARPlaneShowEnabled = value;
+        // }
 
         private void Awake()
         {
@@ -45,6 +52,11 @@ namespace Game.Scripts.Settings
             _isGridEnabled = value;
             grid.SetActive(_isGridEnabled);
         }
+
+        // private void GetIsARPlaneShowEnabled()
+        // {
+        //     _isGridEnabled = _gameManager.GetIsARPlaneShowEnabled();
+        // }
 
         private void GetInputType()
         {
