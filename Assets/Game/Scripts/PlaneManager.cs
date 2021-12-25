@@ -16,16 +16,16 @@ namespace Game.Scripts
             UpdateARPlane();
         }
 
-        public void ShowARPlane()
+        public void SetARPlane(bool value)
         {
-            state = true;
+            state = value;
             
             UpdateARPlane();
         }
 
-        public void HideARPlane()
+        public void ToggleARPlane()
         {
-            state = false;
+            state = !state;
             
             UpdateARPlane();
         }

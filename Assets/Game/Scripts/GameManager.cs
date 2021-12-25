@@ -25,7 +25,6 @@ namespace Game.Scripts
         private ResourceContainer _resourceContainer;
         private MarkerController _markerController;
         private GameSettings _gameSettings;
-        private PlaneManager _planeManager;
 
         [SerializeField] private Snake player;
         [SerializeField] private SnakeMovement playerMove;
@@ -60,8 +59,8 @@ namespace Game.Scripts
 
         [SerializeField] private MenuManager menuManager2d;
         [SerializeField] private MenuManager menuManager3d;
-        private MenuManager _currentMenuManager;
-        private MenuType _currentMenuType;
+        [SerializeField] private MenuManager _currentMenuManager; //todo
+        [SerializeField] private MenuType _currentMenuType; //todo
 
         private void Awake()
         {
@@ -70,7 +69,6 @@ namespace Game.Scripts
             _resourceContainer = FindObjectOfType<ResourceContainer>();
             _markerController = FindObjectOfType<MarkerController>();
             _gameSettings = FindObjectOfType<GameSettings>();
-            _planeManager = FindObjectOfType<PlaneManager>();
         }
 
         private void Start()
@@ -121,7 +119,6 @@ namespace Game.Scripts
         public void PrepareGame()
         {
             _currentMenuManager.ShowPrepareMenu();
-            _planeManager.ShowARPlane();
 
             _placeManager.ResetPosition();
             _resourceContainer.Reset();
@@ -136,7 +133,6 @@ namespace Game.Scripts
         public void CancelPrepareGame()
         {
             _currentMenuManager.HidePrepareMenu();
-            _planeManager.HideARPlane();
 
             PrepareMode = false;
 
@@ -146,7 +142,6 @@ namespace Game.Scripts
         public void StartGame()
         {
             _currentMenuManager.ShowStartMenu();
-            _planeManager.HideARPlane();
 
             player.gameObject.SetActive(true);
 
@@ -241,16 +236,6 @@ namespace Game.Scripts
                 menuManager3d.DisableMenu();
             }
         }
-
-        // public bool GetIsARPlaneShowEnabled()
-        // {
-        //     return _gameSettings.IsARPlaneShowEnabled;
-        // }
-        //
-        // public void SetARPlaneShowEnabled(bool value)
-        // {
-        //     _gameSettings.IsARPlaneShowEnabled = value;
-        // }
         
         public bool IsTouch()
         {
