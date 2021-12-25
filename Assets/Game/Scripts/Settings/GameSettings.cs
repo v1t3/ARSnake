@@ -19,6 +19,9 @@ namespace Game.Scripts.Settings
         private int _inputTypeId;
         public int InputTypeId => _inputTypeId;
 
+        private int _menuTypeId;
+        public int MenuTypeId => _menuTypeId;
+
         private void Awake()
         {
             _gameManager = FindObjectOfType<GameManager>();
@@ -28,6 +31,7 @@ namespace Game.Scripts.Settings
         {
             GetIsGridEnabled();
             GetInputType();
+            GetMenuType();
             LoadGameSettings();
         }
 
@@ -47,6 +51,11 @@ namespace Game.Scripts.Settings
             _inputTypeId = (int)_gameManager.GetInputType();
         }
 
+        private void GetMenuType()
+        {
+            _menuTypeId = (int)_gameManager.GetMenuType();
+        }
+
         public void LoadGameSettings()
         {
             var gameSettings = LoadData();
@@ -55,16 +64,23 @@ namespace Game.Scripts.Settings
             
             _isGridEnabled = gameSettings.IsGridEnabled;
             _inputTypeId = gameSettings.InputTypeId;
+            _menuTypeId = gameSettings.MenuTypeId;
 
             _gameManager.SetInputType(_inputTypeId);
+            _gameManager.SetMenuType(_menuTypeId);
             gridToggle.isOn = _isGridEnabled;
+
+            _gameManager.OnLoadSettings();
         }
 
         public void SaveGameSettings()
         {
             GetIsGridEnabled();
             GetInputType();
+            GetMenuType();
             SaveData();
+
+            _gameManager.OnSaveSettings();
         }
 
         private void SaveData()
